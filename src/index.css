@@ -1,0 +1,57 @@
+/* ============================
+    Import Google Fonts
+============================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap');
+
+/* ============================
+    Import Tailwind CSS Core
+============================ */
+@import "tailwindcss";
+
+/* ============================
+    DaisyUI Theme Configuration
+============================ */
+@plugin "daisyui" {
+    themes: light --default, dark;
+}
+
+/* 🌞 Light Theme  */
+@plugin "daisyui/theme" {
+    name: "light";
+    default: true;
+
+    --color-primary: #28A745; /* Fresh green - primary buttons, highlights */
+    --color-secondary: #FFA500; /* Warm orange - secondary buttons, accents */
+    --color-accent: #4B9460; /* Darker green - icons, borders, subtle highlights */
+    --color-neutral: #222222; /* Dark gray/black for text */
+    --color-base-100: #FFFFFF; /* Main background */
+    --color-base-200: #F0F7F4; /* Light greenish gray for cards/sections */
+    --color-base-300: #D9EAD3; /* Borders and inputs */
+}
+
+/* 🌙 Dark Theme  */
+@plugin "daisyui/theme" {
+    name: "dark";
+
+    --color-primary: #4CAF50; /* Softer fresh green */
+    --color-secondary: #FFB347; /* Soft warm orange */
+    --color-accent: #4CA974; /* Slightly lighter green for better visibility */
+    --color-neutral: #E0E0E0; /* Light gray text */
+    --color-base-100: #121212; /* Dark background */
+    --color-base-200: #1F2A1F; /* Dark card background */
+    --color-base-300: #324032; /* Borders and inputs */
+    --color-highlight: #7ED957; /* Highlight, hover */
+    --color-info: #A6D785; /* Info badges */
+    --color-content: #E6E6E6; /* Text on dark */
+}
+
+/* ============================
+    Global Styling
+============================ */
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+}
