@@ -7,7 +7,8 @@ import SignIn from '../Components/Authentication/Signin/SignIn';
 import PrivateRoute from './PrivateRoute';
 import DashboardLayout from '../Layout/DashboardLayout';
 import DashboardHome from '../Pages/DashBoard/DashboardHome/DashboardHome';
-import AddProduct from '../Layout/AddProduct/AddProduct';
+import AddProduct from '../Pages/DashBoard/AddProduct/AddProduct';
+import MyProducts from '../Pages/DashBoard/MyProducts/MyProducts';
 
 export const router = createBrowserRouter([
     {
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
             // 🧑‍🌾 Vendor
 
             { path: 'add-product', element: <AddProduct></AddProduct> },
-            { path: 'my-products', element: <p>My Products feature coming soon</p> },
+            { path: 'my-products', element: <MyProducts></MyProducts> },
             { path: 'add-ad', element: <p>Add Advertisement feature coming soon</p> },
             { path: 'my-ads', element: <p>My Advertisements feature coming soon</p> },
 

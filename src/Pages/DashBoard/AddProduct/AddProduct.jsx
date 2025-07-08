@@ -3,9 +3,9 @@ import { useContext, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import uploadImageToImgbb from "../../hooks/uploadImageToImgbb";
-import { AuthContext } from "../../Provider/AuthContext";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
+import { AuthContext } from "../../../Provider/AuthContext";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AddProduct = () => {
     const { user } = useContext(AuthContext);
