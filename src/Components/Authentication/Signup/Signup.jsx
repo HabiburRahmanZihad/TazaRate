@@ -152,7 +152,7 @@ const SignUp = () => {
             const userInfo = {
                 name: firebaseUser.displayName || 'No Name',
                 email: userEmail,
-                photoURL: firebaseUser.photoURL || '',
+                profilePhoto: firebaseUser.photoURL || '',
                 role: 'user',
                 createdAt: new Date().toISOString(),
                 lastLogin: new Date().toISOString(),
