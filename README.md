@@ -53,6 +53,9 @@ To help users get updated local market prices of essential items and compare the
   - Password  
 - 🔍 **Note:** Don’t worry about standardization — implement as described here.
 
+
+
+
 ### 🔑 User Login:
 - JWT-based authentication.  
 - Token is generated upon successful login to securely manage sessions.  
@@ -60,6 +63,9 @@ To help users get updated local market prices of essential items and compare the
   - Implement social login using Google.  
   - Upon login, assign role as **user** by default.  
   - 💡 *Hint:* Ensure the system assigns the user role gracefully during social login.
+
+
+
 
 ### 🔒 Role-Based Access Control:
 - Use **middleware** to check user roles and permissions.  

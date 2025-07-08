@@ -1,27 +1,32 @@
-import { use } from 'react';
+import { useContext } from 'react'; // FIX: was `use`, should be `useContext`
 import { AuthContext } from '../Provider/AuthContext';
 import { Navigate, useLocation } from 'react-router';
 import LoadingSpinner from '../Components/Loader/LoadingSpinner';
 
-
 const PrivateRoute = ({ children }) => {
-
+    // Get the current route location
     const location = useLocation();
 
-    const { user, loading } = use(AuthContext);
+    // Access user and loading state from AuthContext
+    const { user, loading } = useContext(AuthContext); // ✅ FIXED
 
-
+    // Show a loading spinner while checking auth status
     if (loading) {
-        return <LoadingSpinner></LoadingSpinner>;
+        return <LoadingSpinner />;
     }
 
+    // If not authenticated, redirect to signin page and preserve attempted route
     if (!user) {
-        // return <Navigate state={location?.pathname} to="/signin" />;
-        // When redirecting unauthenticated user to signin:
-        return <Navigate to="/signin" state={{ from: location }} replace />;
-
+        return (
+            <Navigate
+                to="/signin"
+                state={{ from: location }} // Pass the current location so we can redirect back after login
+                replace
+            />
+        );
     }
 
+    // If authenticated, render the protected children
     return children;
 };
 
