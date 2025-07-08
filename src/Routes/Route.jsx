@@ -3,18 +3,20 @@ import RootLayout from '../Layout/RootLayout';
 import Home from '../Pages/Home/Home';
 import NotFound from '../Pages/Error/NotFound';
 import Signup from '../Components/Authentication/Signup/Signup';
+import SignIn from '../Components/Authentication/Signin/SignIn';
 
 export const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <RootLayout />,
         children: [
             { index: true, element: <Home /> },
-            { path: "*", element: <NotFound></NotFound> }
+            { path: '*', element: <NotFound /> },
         ],
     },
-    {
-        path: 'signup',
-        element: <Signup></Signup>
-    }
+
+    // Routes that should NOT use RootLayout
+    { path: '/signup', element: <Signup /> },
+    { path: '/signin', element: <SignIn /> },
+
 ]);
