@@ -65,33 +65,34 @@ const MyProducts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map(product => (
-                            <tr key={product._id}>
-                                <td>{product.itemName}</td>
-                                <td>৳{product.pricePerUnit}</td>
-                                <td>{product.marketName}</td>
-                                <td>{new Date(product.date).toLocaleDateString()}</td>
-                                <td className="capitalize">{product.status}</td>
-                                <td className="space-x-2">
-                                    <Link
-                                        to={`/vendor/dashboard/update-product/${product._id}`}
-                                        className="btn btn-sm btn-outline btn-info"
-                                    >
-                                        Update
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(product._id)}
-                                        className="btn btn-sm btn-outline btn-error"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        {products.length === 0 && (
+                        {products.length === 0 ? (
                             <tr>
                                 <td colSpan="6" className="text-center py-4">No products found.</td>
                             </tr>
+                        ) : (
+                            products.map(product => (
+                                <tr key={product._id}>
+                                    <td>{product.itemName}</td>
+                                    <td>৳{product.pricePerUnit}</td>
+                                    <td>{product.marketName}</td>
+                                    <td>{new Date(product.date).toLocaleDateString()}</td>
+                                    <td className="capitalize">{product.status}</td>
+                                    <td className="space-x-2">
+                                        <Link
+                                            to={`/dashboard/update-product/${product._id}`}
+                                            className="btn btn-sm btn-outline btn-info"
+                                        >
+                                            Update
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(product._id)}
+                                            className="btn btn-sm btn-outline btn-error"
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
                         )}
                     </tbody>
                 </table>
