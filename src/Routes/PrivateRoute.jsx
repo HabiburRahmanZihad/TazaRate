@@ -1,7 +1,8 @@
 import { useContext } from 'react'; // FIX: was `use`, should be `useContext`
 import { AuthContext } from '../Provider/AuthContext';
 import { Navigate, useLocation } from 'react-router';
-import LoadingSpinner from '../Components/Loader/LoadingSpinner';
+import Loading from '../Pages/Loading/Loading';
+
 
 const PrivateRoute = ({ children }) => {
     // Get the current route location
@@ -12,7 +13,7 @@ const PrivateRoute = ({ children }) => {
 
     // Show a loading spinner while checking auth status
     if (loading) {
-        return <LoadingSpinner />;
+        return <Loading />;
     }
 
     // If not authenticated, redirect to signin page and preserve attempted route
