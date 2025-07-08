@@ -134,11 +134,11 @@ const SignUp = () => {
             const res = await loginGoogle();
             const firebaseUser = res.user;
 
-            // Try multiple ways to extract email
+            // Extract email
             const userEmail =
                 firebaseUser.email ||
                 firebaseUser.providerData?.[0]?.email ||
-                firebaseUser.reload && (await firebaseUser.reload(), firebaseUser.email);
+                (firebaseUser.reload && (await firebaseUser.reload(), firebaseUser.email));
 
             if (!userEmail) {
                 throw new Error("No email found in Google account.");
@@ -153,8 +153,10 @@ const SignUp = () => {
                 lastLogin: new Date().toISOString(),
             };
 
+            // Try creating user
             await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);
 
+            // Success (new user)
             Swal.fire({
                 icon: 'success',
                 title: 'Welcome!',
@@ -166,6 +168,23 @@ const SignUp = () => {
             navigate(from, { replace: true });
 
         } catch (error) {
+            // If user already exists — treat as success
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === 409 &&
+                error.response?.data?.message === "User already exists."
+            ) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome Back!',
+                    text: 'Signed in successfully.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+                return navigate(from, { replace: true });
+            }
+
+            // Handle other errors
             let message = "Something went wrong. Please try again.";
             if (error.code === "auth/popup-closed-by-user") {
                 message = "You closed the sign-in popup.";
@@ -184,7 +203,6 @@ const SignUp = () => {
             });
         }
     };
-
 
     return (
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
