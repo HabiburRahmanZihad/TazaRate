@@ -8,7 +8,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 
 const SignIn = () => {
-    const { signInUser, loginGoogle } = useContext(AuthContext);
+    const { signInUser, loginGoogle, forgetPassword } = useContext(AuthContext);
+
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
@@ -19,6 +20,7 @@ const SignIn = () => {
     const {
         register,
         handleSubmit,
+        getValues, // ✅ Add this line
         formState: { errors },
         reset,
     } = useForm();
@@ -29,11 +31,14 @@ const SignIn = () => {
             // Email/password sign-in returns user object
             const user = await signInUser(email, password);
 
+
+
             const userInfo = {
                 name: user.displayName || 'User',
-                email: user.email,
-                photoURL: user.photoURL,
+                email: user.email, // <=== IMPORTANT: use top-level email, not providerData
+                profilePhoto: user.photoURL, // 🔄 changed from photoURL
                 role: 'user',
+                createdAt: new Date().toISOString(),
                 lastLogin: new Date().toISOString(),
             };
 
@@ -82,9 +87,10 @@ const SignIn = () => {
 
             const userInfo = {
                 name: user.displayName || 'Google User',
-                email: user.email, // <=== IMPORTANT: use top-level email, not providerData
-                photoURL: user.photoURL,
+                email: user.email,
+                profilePhoto: user?.photoURL,
                 role: 'user',
+                createdAt: new Date().toISOString(),
                 lastLogin: new Date().toISOString(),
             };
 
@@ -108,6 +114,34 @@ const SignIn = () => {
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleForgotPassword = async () => {
+        const email = getValues('email'); // Get the email from form state
+
+        if (!email) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Email Required',
+                text: 'Please enter your email to reset password.',
+            });
+        }
+
+        try {
+            await forgetPassword(email);
+            Swal.fire({
+                icon: 'success',
+                title: 'Password Reset Email Sent',
+                text: 'Check your inbox for a link to reset your password.',
+            });
+        } catch (error) {
+            console.error('Reset password error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Reset Failed',
+                text: error.message || 'Failed to send reset email. Try again.',
+            });
         }
     };
 
@@ -165,6 +199,17 @@ const SignIn = () => {
                             </span>
                         </div>
                         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+
+
+                        <div className="text-right mt-1">
+                            <button
+                                type="button"
+                                onClick={handleForgotPassword}
+                                className="text-sm text-primary hover:underline"
+                            >
+                                Forgot password?
+                            </button>
+                        </div>
                     </div>
 
                     {/* Submit */}

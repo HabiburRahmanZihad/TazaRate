@@ -7,10 +7,12 @@ import { AuthContext } from '../../../Provider/AuthContext';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import uploadImageToImgbb from '../../../hooks/uploadImageToImgbb';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const SignUp = () => {
     const { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
     const { createUser, updateUserProfile, loginGoogle } = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -93,7 +95,10 @@ const SignUp = () => {
             });
 
             // Check if user already exists
-            const { data: existingUser } = await axios.get(`${import.meta.env.VITE_API_URL}/users?email=${encodeURIComponent(data.email)}`);
+            // const { data: existingUser } = await axios.get(`${import.meta.env.VITE_API_URL}/users?email=${encodeURIComponent(data.email)}`);
+
+
+            const { data: existingUser } = await axiosSecure.get(`/users/${encodeURIComponent(data.email)}`);
 
             if (!existingUser?.exists) {
                 const userInfo = {
