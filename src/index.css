@@ -20,29 +20,29 @@
     name: "light";
     default: true;
 
-    --color-primary: #28A745; /* Fresh green - primary buttons, highlights */
-    --color-secondary: #FFA500; /* Warm orange - secondary buttons, accents */
-    --color-accent: #4B9460; /* Darker green - icons, borders, subtle highlights */
-    --color-neutral: #222222; /* Dark gray/black for text */
-    --color-base-100: #FFFFFF; /* Main background */
-    --color-base-200: #F0F7F4; /* Light greenish gray for cards/sections */
-    --color-base-300: #D9EAD3; /* Borders and inputs */
+    --color-primary: #28A745;      /* Fresh green - primary buttons */
+    --color-secondary: #FF8C42;    /* Muted warm orange - better contrast */
+    --color-accent: #3C7A4F;       /* Deep green accent for icons/borders */
+    --color-neutral: #222222;      /* Neutral black for text */
+    --color-base-100: #FFFFFF;     /* Background */
+    --color-base-200: #F4FBF7;     /* Very light greenish for cards */
+    --color-base-300: #D4EAD3;     /* Soft green-gray for borders */
 }
 
 /* 🌙 Dark Theme  */
 @plugin "daisyui/theme" {
     name: "dark";
 
-    --color-primary: #4CAF50; /* Softer fresh green */
-    --color-secondary: #FFB347; /* Soft warm orange */
-    --color-accent: #4CA974; /* Slightly lighter green for better visibility */
-    --color-neutral: #E0E0E0; /* Light gray text */
-    --color-base-100: #121212; /* Dark background */
-    --color-base-200: #1F2A1F; /* Dark card background */
-    --color-base-300: #324032; /* Borders and inputs */
-    --color-highlight: #7ED957; /* Highlight, hover */
-    --color-info: #A6D785; /* Info badges */
-    --color-content: #E6E6E6; /* Text on dark */
+    --color-primary: #4CAF50;      /* Softer fresh green */
+    --color-secondary: #FF944D;    /* Warmer orange matching primary tone */
+    --color-accent: #5DBB7C;       /* Brighter green accent for dark BG */
+    --color-neutral: #E0E0E0;      /* Light gray text */
+    --color-base-100: #121212;     /* Dark base background */
+    --color-base-200: #1E2A22;     /* Slightly green-tinted dark card BG */
+    --color-base-300: #334D3C;     /* Dark green-gray for inputs/borders */
+    --color-highlight: #7ED957;    /* Bright green hover */
+    --color-info: #A6D785;         /* Info badges */
+    --color-content: #E6E6E6;      /* Standard readable light text */
 }
 
 /* ============================
