@@ -14,6 +14,7 @@ import AddAdvertisement from '../Pages/DashBoard/AddAdvertisement/AddAdvertiseme
 import MyAdvertisements from '../Pages/DashBoard/MyAdvertisements/MyAdvertisements';
 import AllUsers from '../Pages/DashBoard/AllUsers/AllUsers';
 import AllProducts from '../Pages/DashBoard/AllProducts/AllProducts';
+import AllAdvertisementsAdmin from '../Pages/DashBoard/AllAdvertisementsAdmin/AllAdvertisementsAdmin';
 
 export const router = createBrowserRouter([
     {
@@ -56,7 +57,7 @@ export const router = createBrowserRouter([
             // 🛠 Admin
             { path: 'all-users', element: <AllUsers></AllUsers> },
             { path: 'all-products', element: <AllProducts></AllProducts> },
-            { path: 'all-ads', element: <p>All Advertisements feature coming soon</p> },
+            { path: 'all-ads', element: <AllAdvertisementsAdmin></AllAdvertisementsAdmin>},
             { path: 'all-orders', element: <p>All Orders feature coming soon</p> },
         ]
     }
