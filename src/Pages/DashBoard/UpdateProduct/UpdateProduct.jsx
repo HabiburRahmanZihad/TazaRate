@@ -32,15 +32,14 @@ const UpdateProduct = () => {
 
     const imageFile = watch("image");
 
-    // Fetch product data on mount
     useEffect(() => {
         async function fetchProduct() {
             try {
                 const { data } = await axiosSecure.get(`/products/${id}`);
                 data.date = data.date ? new Date(data.date) : new Date();
-                reset(data); // preload form fields
+                reset(data);
                 setImagePreview(data.imageUrl || null);
-                setExistingData(data); // ✅ This must be set
+                setExistingData(data);
                 setLoading(false);
             } catch (err) {
                 console.error("Failed to fetch product:", err);
@@ -52,12 +51,16 @@ const UpdateProduct = () => {
         fetchProduct();
     }, [id, reset, axiosSecure]);
 
-    // Preview image when new image file selected
     useEffect(() => {
         if (imageFile && imageFile.length > 0) {
             const file = imageFile[0];
             const previewUrl = URL.createObjectURL(file);
-            setImagePreview(previewUrl);
+            setImagePreview((prev) => {
+                if (prev && prev.startsWith("blob:")) {
+                    URL.revokeObjectURL(prev);
+                }
+                return previewUrl;
+            });
 
             return () => URL.revokeObjectURL(previewUrl);
         }
@@ -72,16 +75,19 @@ const UpdateProduct = () => {
                 return;
             }
 
-            let imageUrl = imagePreview;
+            let imageUrl = existingData.imageUrl;
+
             if (imageFile && imageFile.length > 0) {
                 imageUrl = await uploadImageToImgbb(imageFile[0]);
+                if (!imageUrl) {
+                    throw new Error("Image upload failed");
+                }
             }
 
             const currentDate = data.date.toISOString().split("T")[0];
             const newPrice = parseFloat(data.pricePerUnit);
 
             const updatedPrices = [...(existingData?.prices || [])];
-
             const lastEntry = updatedPrices[updatedPrices.length - 1];
             if (!lastEntry || lastEntry.price !== newPrice || lastEntry.date !== currentDate) {
                 updatedPrices.push({ date: currentDate, price: newPrice });
@@ -94,6 +100,7 @@ const UpdateProduct = () => {
                 date: currentDate,
                 description: data.description,
                 itemName: data.itemName,
+                itemNote: data.itemNote || "",
                 status: data.status,
                 pricePerUnit: newPrice,
                 imageUrl,
@@ -110,13 +117,11 @@ const UpdateProduct = () => {
             }
         } catch (err) {
             console.error("Error updating product:", err);
-            Swal.fire("Error", "Failed to update product.", "error");
+            Swal.fire("Error", err.message || "Failed to update product.", "error");
         } finally {
             setLoading(false);
         }
     };
-
-
 
     if (loading) return <p className="text-center py-10">Loading product...</p>;
 
@@ -126,8 +131,9 @@ const UpdateProduct = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                    <label className="block font-medium">Vendor Email</label>
+                    <label htmlFor="vendorEmail" className="block font-medium">Vendor Email</label>
                     <input
+                        id="vendorEmail"
                         type="email"
                         {...register("vendorEmail")}
                         readOnly
@@ -136,8 +142,9 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Vendor Name</label>
+                    <label htmlFor="vendorName" className="block font-medium">Vendor Name</label>
                     <input
+                        id="vendorName"
                         type="text"
                         {...register("vendorName")}
                         readOnly
@@ -146,8 +153,9 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Market Name</label>
+                    <label htmlFor="marketName" className="block font-medium">Market Name</label>
                     <input
+                        id="marketName"
                         {...register("marketName", { required: "Market name is required" })}
                         className="input input-bordered w-full"
                     />
@@ -157,12 +165,13 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Date</label>
+                    <label htmlFor="date" className="block font-medium">Date</label>
                     <Controller
                         control={control}
                         name="date"
                         render={({ field }) => (
                             <DatePicker
+                                id="date"
                                 {...field}
                                 selected={field.value}
                                 className="input input-bordered w-full"
@@ -173,8 +182,9 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Market Description</label>
+                    <label htmlFor="description" className="block font-medium">Market Description</label>
                     <textarea
+                        id="description"
                         {...register("description", { required: "Description is required" })}
                         className="textarea textarea-bordered w-full"
                         rows={3}
@@ -185,8 +195,9 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Item Name</label>
+                    <label htmlFor="itemName" className="block font-medium">Item Name</label>
                     <input
+                        id="itemName"
                         {...register("itemName", { required: "Item name is required" })}
                         className="input input-bordered w-full"
                     />
@@ -195,9 +206,24 @@ const UpdateProduct = () => {
                     )}
                 </div>
 
+                {/* 📝 Optional Item Description */}
                 <div>
-                    <label className="block font-medium">Status</label>
+                    <label htmlFor="itemNote" className="block font-medium">
+                        📝 Item Description
+                    </label>
+                    <textarea
+                        id="itemNote"
+                        {...register("itemNote")}
+                        className="textarea textarea-bordered w-full"
+                        placeholder="e.g., Freshly harvested, organic quality"
+                        rows={2}
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="status" className="block font-medium">Status</label>
                     <input
+                        id="status"
                         type="text"
                         readOnly
                         value="Pending"
@@ -207,13 +233,37 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">Product Image</label>
+                    <label htmlFor="image" className="block font-medium">Product Image</label>
                     <input
+                        id="image"
                         type="file"
                         accept="image/*"
-                        {...register("image")}
+                        {...register("image", {
+                            validate: {
+                                fileType: (files) =>
+                                    !files[0] || files[0].type.startsWith("image/") || "Only image files are allowed",
+                                fileSize: (files) =>
+                                    !files[0] || files[0].size < 2 * 1024 * 1024 || "Max file size is 2MB",
+                            },
+                            onChange: (e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    const previewUrl = URL.createObjectURL(file);
+                                    setImagePreview((prev) => {
+                                        if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
+                                        return previewUrl;
+                                    });
+                                } else {
+                                    setImagePreview(existingData?.imageUrl || null);
+                                }
+                            }
+                        })}
                         className="file-input file-input-bordered w-full"
                     />
+                    {errors.image && (
+                        <p className="text-red-500 text-sm">{errors.image.message}</p>
+                    )}
+
                     {imagePreview && (
                         <img
                             src={imagePreview}
@@ -224,10 +274,11 @@ const UpdateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium">
+                    <label htmlFor="pricePerUnit" className="block font-medium">
                         Price per Unit (e.g., ৳30/kg)
                     </label>
                     <input
+                        id="pricePerUnit"
                         type="number"
                         step="0.01"
                         {...register("pricePerUnit", { required: "Price is required" })}
