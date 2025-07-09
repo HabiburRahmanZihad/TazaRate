@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthContext";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
@@ -77,19 +76,26 @@ const MyProducts = () => {
                                     <td>{product.marketName}</td>
                                     <td>{new Date(product.date).toLocaleDateString()}</td>
                                     <td
-                                        className={`capitalize ${product.status === 'rejected' ? 'text-red-500 underline cursor-help' : ''
-                                            }`}
-                                        title={product.status === 'rejected' ? product.rejectionReason || 'No reason provided' : ''}
+                                        className={`capitalize ${
+                                            product.status === 'rejected' ? 'text-red-500 underline cursor-help' : ''
+                                        }`}
+                                        title={
+                                            product.status === 'rejected'
+                                                ? product.rejectionReason || 'No reason provided'
+                                                : ''
+                                        }
                                     >
                                         {product.status}
                                     </td>
                                     <td className="space-x-2">
-                                        <Link
-                                            to={`/dashboard/update-product/${product._id}`}
-                                            className="btn btn-sm btn-outline btn-info"
-                                        >
-                                            Update
-                                        </Link>
+                                        {product.status !== 'rejected' && (
+                                            <Link
+                                                to={`/dashboard/update-product/${product._id}`}
+                                                className="btn btn-sm btn-outline btn-info"
+                                            >
+                                                Update
+                                            </Link>
+                                        )}
                                         <button
                                             onClick={() => handleDelete(product._id)}
                                             className="btn btn-sm btn-outline btn-error"

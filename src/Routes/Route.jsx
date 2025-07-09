@@ -15,6 +15,7 @@ import MyAdvertisements from '../Pages/DashBoard/MyAdvertisements/MyAdvertisemen
 import AllUsers from '../Pages/DashBoard/AllUsers/AllUsers';
 import AllProducts from '../Pages/DashBoard/AllProducts/AllProducts';
 import AllAdvertisementsAdmin from '../Pages/DashBoard/AllAdvertisementsAdmin/AllAdvertisementsAdmin';
+import ViewPriceTrends from '../Pages/DashBoard/ViewPriceTrends/ViewPriceTrends';
 
 export const router = createBrowserRouter([
     {
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
         children: [
             // 🧑‍💼 User
             { index: true, element: <DashboardHome></DashboardHome> },
-            { path: 'price-trends', element: <p>Price Trends feature coming soon</p> },
+            { path: 'price-trends', element: <ViewPriceTrends></ViewPriceTrends> },
             { path: 'watchlist', element: <p>Watchlist Manager feature coming soon</p> },
             { path: 'my-orders', element: <p>My Orders feature coming soon</p> },
 
