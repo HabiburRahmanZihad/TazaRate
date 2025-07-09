@@ -18,6 +18,7 @@ import AllAdvertisementsAdmin from '../Pages/DashBoard/AllAdvertisementsAdmin/Al
 import ViewPriceTrends from '../Pages/DashBoard/ViewPriceTrends/ViewPriceTrends';
 import AllProductsPage from '../Pages/AllProductsPage/AllProductsPage';
 import ProductDetailsPage from '../Pages/ProductDetailsPage/ProductDetailsPage';
+import ManageWatchlist from '../Pages/DashBoard/ManageWatchlist/ManageWatchlist';
 
 export const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
             // 🧑‍💼 User
             { index: true, element: <DashboardHome></DashboardHome> },
             { path: 'price-trends', element: <ViewPriceTrends></ViewPriceTrends> },
-            { path: 'watchlist', element: <p>Watchlist Manager feature coming soon</p> },
+            { path: 'watchlist', element: <ManageWatchlist></ManageWatchlist> },
             { path: 'my-orders', element: <p>My Orders feature coming soon</p> },
 
             // 🧑‍🌾 Vendor
