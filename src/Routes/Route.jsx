@@ -11,6 +11,7 @@ import AddProduct from '../Pages/DashBoard/AddProduct/AddProduct';
 import MyProducts from '../Pages/DashBoard/MyProducts/MyProducts';
 import UpdateProduct from '../Pages/DashBoard/UpdateProduct/UpdateProduct';
 import AddAdvertisement from '../Pages/DashBoard/AddAdvertisement/AddAdvertisement';
+import MyAdvertisements from '../Pages/DashBoard/MyAdvertisements/MyAdvertisements';
 
 export const router = createBrowserRouter([
     {
@@ -47,7 +48,7 @@ export const router = createBrowserRouter([
             { path: 'add-product', element: <AddProduct></AddProduct> },
             { path: 'my-products', element: <MyProducts></MyProducts> },
             { path: 'add-ad', element: <AddAdvertisement></AddAdvertisement> },
-            { path: 'my-ads', element: <p>My Advertisements feature coming soon</p> },
+            { path: 'my-ads', element: <MyAdvertisements></MyAdvertisements> },
             { path: 'update-product/:id', element: <UpdateProduct></UpdateProduct> },
 
             // 🛠 Admin
