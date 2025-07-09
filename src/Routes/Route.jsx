@@ -16,6 +16,7 @@ import AllUsers from '../Pages/DashBoard/AllUsers/AllUsers';
 import AllProducts from '../Pages/DashBoard/AllProducts/AllProducts';
 import AllAdvertisementsAdmin from '../Pages/DashBoard/AllAdvertisementsAdmin/AllAdvertisementsAdmin';
 import ViewPriceTrends from '../Pages/DashBoard/ViewPriceTrends/ViewPriceTrends';
+import AllProductsPage from '../Pages/AllProductsPage/AllProductsPage';
 
 export const router = createBrowserRouter([
     {
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { index: true, element: <Home /> },
+            { path: 'products', element: <AllProductsPage /> },
             { path: '*', element: <NotFound /> },
         ],
     },
