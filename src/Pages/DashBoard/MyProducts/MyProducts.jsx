@@ -76,7 +76,13 @@ const MyProducts = () => {
                                     <td>৳{product.pricePerUnit}</td>
                                     <td>{product.marketName}</td>
                                     <td>{new Date(product.date).toLocaleDateString()}</td>
-                                    <td className="capitalize">{product.status}</td>
+                                    <td
+                                        className={`capitalize ${product.status === 'rejected' ? 'text-red-500 underline cursor-help' : ''
+                                            }`}
+                                        title={product.status === 'rejected' ? product.rejectionReason || 'No reason provided' : ''}
+                                    >
+                                        {product.status}
+                                    </td>
                                     <td className="space-x-2">
                                         <Link
                                             to={`/dashboard/update-product/${product._id}`}
