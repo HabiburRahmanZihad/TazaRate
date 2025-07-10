@@ -1,21 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { useState } from 'react';
 
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
     const queryClient = useQueryClient();
+    const [search, setSearch] = useState('');
 
-    // Fetch all users
+    // Fetch all users (with search)
     const { data: users = [], isLoading } = useQuery({
-        queryKey: ['all-users'],
+        queryKey: ['all-users', search],
         queryFn: async () => {
-            const res = await axiosSecure.get('/users');
+            const res = await axiosSecure.get(`/users?search=${search}`);
             return res.data;
         },
     });
 
-    // Mutation to update role
     const updateRoleMutation = useMutation({
         mutationFn: async ({ userId, role }) => {
             const res = await axiosSecure.patch(`/users/${userId}`, { role });
@@ -35,6 +36,18 @@ const AllUsers = () => {
     return (
         <div className="overflow-x-auto p-4">
             <h2 className="text-2xl font-semibold mb-4">👥 All Users</h2>
+
+            {/* 🔍 Search Input */}
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search by name or email"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full md:w-1/2 px-4 py-2 border rounded shadow-sm"
+                />
+            </div>
+
             {isLoading ? (
                 <p>Loading users...</p>
             ) : (
