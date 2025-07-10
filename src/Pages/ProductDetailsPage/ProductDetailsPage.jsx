@@ -95,7 +95,14 @@ const ProductDetailsPage = () => {
         if (!rating || !comment.trim()) {
             return toast.error("Add rating and comment");
         }
-        axiosSecure.post(`/products/${id}/reviews`, { rating, comment })
+
+        const reviewData = {
+            rating,
+            comment,
+            userName: user?.displayName || ""  
+        };
+
+        axiosSecure.post(`/products/${id}/reviews`, reviewData)
             .then(res => {
                 const updatedReview = res.data;
                 setUserReview(updatedReview);
