@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -12,9 +12,9 @@ import {
     ResponsiveContainer,
     ReferenceLine,
 } from "recharts";
-import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import useUserRole from "../../hooks/useUserRole";
 
 const getPriceChangeSummary = (data) => {
     if (data.length < 2) return null;
@@ -44,6 +44,7 @@ const ProductDetailsPage = () => {
     const [loadingCompare, setLoadingCompare] = useState(false);
     const axiosSecure = useAxiosSecure();
     const [userReview, setUserReview] = useState(null);
+    const { role, roleLoading } = useUserRole();
 
     useEffect(() => {
         if (!id) return;
@@ -100,7 +101,7 @@ const ProductDetailsPage = () => {
         const reviewData = {
             rating,
             comment,
-            userName: user?.displayName || ""  
+            userName: user?.displayName || ""
         };
 
         axiosSecure.post(`/products/${id}/reviews`, reviewData)
@@ -186,21 +187,29 @@ const ProductDetailsPage = () => {
             <p className="font-medium">👨‍🌾 Vendor Email: {product.vendorEmail}</p>
 
             <div className="space-x-2 mt-2">
-                <Link to={`/payment/${id}`} className="inline-block">
-                    <button className="btn btn-primary">
-                        🛒 Buy Product
-                    </button>
-                </Link>
+                {
+                    !roleLoading && role === "user" &&
+
+                    <>
+                        <Link to={`/payment/${id}`} className="inline-block">
+                            <button className="btn btn-primary">
+                                🛒 Buy Product
+                            </button>
+                        </Link>
+
+                        <button
+                            onClick={handleWatchlist}
+                            className="btn btn-outline"
+                            disabled={watchlisted}
+                        >
+                            ⭐ Add to Watchlist
+                        </button>
+                    </>
+
+                }
 
 
 
-                <button
-                    onClick={handleWatchlist}
-                    className="btn btn-outline"
-                    disabled={watchlisted}
-                >
-                    ⭐ Add to Watchlist
-                </button>
 
             </div>
 
