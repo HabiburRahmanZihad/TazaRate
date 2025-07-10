@@ -21,6 +21,7 @@ import ProductDetailsPage from '../Pages/ProductDetailsPage/ProductDetailsPage';
 import ManageWatchlist from '../Pages/DashBoard/ManageWatchlist/ManageWatchlist';
 import Payment from '../Pages/Payment/Payment';
 import MyOrdersPage from '../Pages/DashBoard/MyOrdersPage/MyOrdersPage';
+import AllOrdersPage from '../Pages/DashBoard/AllOrdersPage/AllOrdersPage';
 
 export const router = createBrowserRouter([
     {
@@ -67,7 +68,7 @@ export const router = createBrowserRouter([
             { path: 'all-users', element: <AllUsers></AllUsers> },
             { path: 'all-products', element: <AllProducts></AllProducts> },
             { path: 'all-ads', element: <AllAdvertisementsAdmin></AllAdvertisementsAdmin>},
-            { path: 'all-orders', element: <p>All Orders feature coming soon</p> },
+            { path: 'all-orders', element: <AllOrdersPage></AllOrdersPage> },
         ]
     }
 ]);
