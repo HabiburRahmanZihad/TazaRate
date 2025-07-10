@@ -20,6 +20,7 @@ import AllProductsPage from '../Pages/AllProductsPage/AllProductsPage';
 import ProductDetailsPage from '../Pages/ProductDetailsPage/ProductDetailsPage';
 import ManageWatchlist from '../Pages/DashBoard/ManageWatchlist/ManageWatchlist';
 import Payment from '../Pages/Payment/Payment';
+import MyOrdersPage from '../Pages/DashBoard/MyOrdersPage/MyOrdersPage';
 
 export const router = createBrowserRouter([
     {
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
             { index: true, element: <DashboardHome></DashboardHome> },
             { path: 'price-trends', element: <ViewPriceTrends></ViewPriceTrends> },
             { path: 'watchlist', element: <ManageWatchlist></ManageWatchlist> },
-            { path: 'my-orders', element: <p>My Orders feature coming soon</p> },
+            { path: 'my-orders', element: <MyOrdersPage /> },
 
             // 🧑‍🌾 Vendor
 
