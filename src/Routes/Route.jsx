@@ -19,6 +19,7 @@ import ViewPriceTrends from '../Pages/DashBoard/ViewPriceTrends/ViewPriceTrends'
 import AllProductsPage from '../Pages/AllProductsPage/AllProductsPage';
 import ProductDetailsPage from '../Pages/ProductDetailsPage/ProductDetailsPage';
 import ManageWatchlist from '../Pages/DashBoard/ManageWatchlist/ManageWatchlist';
+import Payment from '../Pages/Payment/Payment';
 
 export const router = createBrowserRouter([
     {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
             { index: true, element: <Home /> },
             { path: 'products', element: <AllProductsPage /> },
             { path: 'products/:id', element: <PrivateRoute><ProductDetailsPage /></PrivateRoute> },
+            { path: '/payment/:id', element: <PrivateRoute><Payment /></PrivateRoute> },
             { path: '*', element: <NotFound /> },
         ],
     },

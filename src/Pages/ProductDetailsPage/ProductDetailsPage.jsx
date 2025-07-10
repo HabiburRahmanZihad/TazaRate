@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {
@@ -142,14 +142,7 @@ const ProductDetailsPage = () => {
             .finally(() => setLoadingCompare(false));
     };
 
-    const handleBuy = () => {
-        axios.post(`${import.meta.env.VITE_API_URL}/create-payment`, {
-            productId: id,
-            userEmail: user.email,
-        })
-            .then(res => window.location = res.data.checkoutUrl)
-            .catch(() => toast.error("Payment start failed"));
-    };
+
 
     if (!product) return <div className="text-center p-8">Loading product details...</div>;
 
@@ -182,11 +175,15 @@ const ProductDetailsPage = () => {
             </div>
 
             <p className="font-medium">👨‍🌾 Vendor: {product.vendorName}</p>
+            <p className="font-medium">👨‍🌾 Vendor Email: {product.vendorEmail}</p>
 
             <div className="space-x-2 mt-2">
-                <button onClick={handleBuy} className="btn btn-primary">
-                    🛒 Buy Product
-                </button>
+                <Link to={`/payment/${id}`} className="inline-block">
+                    <button className="btn btn-primary">
+                        🛒 Buy Product
+                    </button>
+                </Link>
+
 
 
                 <button
@@ -254,7 +251,7 @@ const ProductDetailsPage = () => {
                 )}
             </div>
 
-<div className="pt-6 space-y-2">
+            <div className="pt-6 space-y-2">
                 <h2 className="text-xl font-semibold">📊 Compare with Previous Data</h2>
 
                 <div className="flex gap-2 items-center">
