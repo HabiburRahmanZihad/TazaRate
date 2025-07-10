@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../Provider/AuthContext";
+import {  useEffect } from "react";
 import Swal from "sweetalert2";
+import useAuth from "./useAuth";
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
 });
 
 const useAxiosSecure = () => {
-    const { user, signOutUser } = useContext(AuthContext);
+    const { user, signOutUser } = useAuth();
 
     useEffect(() => {
         const requestInterceptor = axiosInstance.interceptors.request.use(config => {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
 const getPriceChangeSummary = (data) => {
     if (data.length < 2) return null;
@@ -32,7 +33,7 @@ const getPriceChangeSummary = (data) => {
 
 const ProductDetailsPage = () => {
     const { id } = useParams();
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const [product, setProduct] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [watchlisted, setWatchlisted] = useState(false);

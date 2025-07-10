@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiEye, FiEyeOff, FiImage, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { AuthContext } from '../../../Provider/AuthContext';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import uploadImageToImgbb from '../../../hooks/uploadImageToImgbb';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
 
 const SignUp = () => {
     const { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
-    const { createUser, updateUserProfile, loginGoogle } = useContext(AuthContext);
+    const { createUser, updateUserProfile, loginGoogle } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     const navigate = useNavigate();

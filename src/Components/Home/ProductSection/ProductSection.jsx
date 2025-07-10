@@ -1,14 +1,14 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { AuthContext } from '../../../Provider/AuthContext';
+import useAuth from '../../../hooks/useAuth';
 
 
 
 const ProductSection = () => {
     const [products, setProducts] = useState([]);
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -1,7 +1,6 @@
-import { useContext } from 'react'; // FIX: was `use`, should be `useContext`
-import { AuthContext } from '../Provider/AuthContext';
 import { Navigate, useLocation } from 'react-router';
 import Loading from '../Pages/Loading/Loading';
+import useAuth from '../hooks/useAuth';
 
 
 const PrivateRoute = ({ children }) => {
@@ -9,7 +8,7 @@ const PrivateRoute = ({ children }) => {
     const location = useLocation();
 
     // Access user and loading state from AuthContext
-    const { user, loading } = useContext(AuthContext); // ✅ FIXED
+    const { user, loading } = useAuth();
 
     // Show a loading spinner while checking auth status
     if (loading) {

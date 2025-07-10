@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState, useCallback } from "react";
-import { AuthContext } from "../../../Provider/AuthContext";
+import {  useEffect, useState, useCallback } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
+import useAuth from "../../../hooks/useAuth";
 
 const MyAdvertisements = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [ads, setAds] = useState([]);
 

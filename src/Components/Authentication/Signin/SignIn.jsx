@@ -1,14 +1,15 @@
 import { useForm } from 'react-hook-form';
-import { useContext, useState } from 'react';
+import {  useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
-import { AuthContext } from '../../../Provider/AuthContext';
+
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
+import useAuth from '../../../hooks/useAuth';
 
 const SignIn = () => {
-    const { signInUser, loginGoogle, forgetPassword } = useContext(AuthContext);
+    const { signInUser, loginGoogle, forgetPassword } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();

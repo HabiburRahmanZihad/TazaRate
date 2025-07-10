@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
-import { AuthContext } from "../../../Provider/AuthContext";
+import useAuth from "../../../hooks/useAuth";
 
 const AddAdvertisement = () => {
-    const { user } = useContext(AuthContext); // Assuming you have AuthContext to get user info
+    const { user } = useAuth(); // Assuming you have AuthContext to get user info
 
     const {
         register,

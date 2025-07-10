@@ -1,13 +1,13 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { AuthContext } from "../../../Provider/AuthContext";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAuth from "../../../hooks/useAuth";
 
 
 const ManageWatchlist = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const [watchlist, setWatchlist] = useState([]);
     const [loading, setLoading] = useState(true);
     const [removingId, setRemovingId] = useState(null); // ✅ for loading state

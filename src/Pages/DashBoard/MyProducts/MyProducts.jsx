@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { AuthContext } from "../../../Provider/AuthContext";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
+import useAuth from "../../../hooks/useAuth";
 
 const MyProducts = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);

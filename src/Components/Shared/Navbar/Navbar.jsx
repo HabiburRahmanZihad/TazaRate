@@ -1,14 +1,14 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import {  useState, useEffect, useRef } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { NavLink, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
-import { AuthContext } from '../../../Provider/AuthContext';
 import { FiLogOut, FiLogIn, FiX } from 'react-icons/fi';
 import logo from '../../../assets/AllPic/Logo_noBgColor.png';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
 
 const Navbar = () => {
-    const { user, signOutUser } = useContext(AuthContext);
+    const { user, signOutUser } = useAuth();
     const [dbUser, setDbUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);

@@ -1,15 +1,16 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { AuthContext } from "../../Provider/AuthContext";
+
+import useAuth from "../../hooks/useAuth";
 
 const PaymentForm = ({ product }) => {
     const stripe = useStripe();
     const elements = useElements();
     const axiosSecure = useAxiosSecure();
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [error, setError] = useState(null);
