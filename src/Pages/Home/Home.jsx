@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Banner from '../../Components/Home/Banner/Banner';
 import ProductSection from '../../Components/Home/ProductSection/ProductSection';
+import AdvertisementHighlights from '../../Components/Home/AdvertisementHighlights/AdvertisementHighlights';
 
 
 const Home = () => {
@@ -14,6 +15,18 @@ const Home = () => {
             >
                 <Banner />
             </motion.section>
+
+
+            {/* Advertisement Highlights Section */}
+            <motion.section
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+            >
+                <AdvertisementHighlights />
+            </motion.section>
+
+
 
             {/* Product Section - Display 6 product cards */}
             <motion.section
