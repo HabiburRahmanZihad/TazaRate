@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import RootLayout from '../Layout/RootLayout';
 import Home from '../Pages/Home/Home';
-import NotFound from '../Pages/Error/NotFound';
 import Signup from '../Components/Authentication/Signup/Signup';
 import SignIn from '../Components/Authentication/Signin/SignIn';
 import PrivateRoute from './PrivateRoute';
@@ -31,6 +30,8 @@ import Terms from '../Pages/Terms/Terms';
 import Privacy from '../Pages/Privacy/Privacy';
 import Refund from '../Pages/Refund/Refund';
 import Help from '../Pages/Help/Help';
+import Error from '../Pages/Error/Error';
+import DashboardError from '../Pages/DashBoard/DashboardError/DashboardError';
 
 export const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
             { path: '/privacy', element: <Privacy /> },
             { path: '/refund', element: <Refund /> },
             { path: '/help', element: <Help /> },
-            { path: '*', element: <NotFound /> },
+            { path: '*', element: <Error /> },
         ],
     },
 
@@ -60,31 +61,30 @@ export const router = createBrowserRouter([
     // Dashboard routes
     {
         path: '/dashboard',
-        element: (
-            <PrivateRoute>
-                <DashboardLayout />
-            </PrivateRoute>
-        ),
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
         children: [
             // 🧑‍💼 User
-            { index: true, element: <PrivateRoute><DashboardHome></DashboardHome></PrivateRoute> },
-            { path: 'price-trends', element: <PrivateRoute><ViewPriceTrends></ViewPriceTrends></PrivateRoute> },
-            { path: 'watchlist', element: <PrivateRoute><ManageWatchlist></ManageWatchlist></PrivateRoute> },
+            { index: true, element: <PrivateRoute><DashboardHome /></PrivateRoute> },
+            { path: 'price-trends', element: <PrivateRoute><ViewPriceTrends /></PrivateRoute> },
+            { path: 'watchlist', element: <PrivateRoute><ManageWatchlist /></PrivateRoute> },
             { path: 'my-orders', element: <PrivateRoute><MyOrdersPage /></PrivateRoute> },
 
             // 🧑‍🌾 Vendor
 
-            { path: 'add-product', element: <VendorRoute><AddProduct></AddProduct></VendorRoute> },
-            { path: 'my-products', element: <VendorRoute><MyProducts></MyProducts></VendorRoute> },
-            { path: 'add-ad', element: <VendorRoute><AddAdvertisement></AddAdvertisement></VendorRoute> },
-            { path: 'my-ads', element: <VendorRoute><MyAdvertisements></MyAdvertisements></VendorRoute> },
-            { path: 'update-product/:id', element: <VendorRoute><UpdateProduct></UpdateProduct></VendorRoute> },
+            { path: 'add-product', element: <VendorRoute><AddProduct /></VendorRoute> },
+            { path: 'my-products', element: <VendorRoute><MyProducts /></VendorRoute> },
+            { path: 'add-ad', element: <VendorRoute><AddAdvertisement /></VendorRoute> },
+            { path: 'my-ads', element: <VendorRoute><MyAdvertisements /></VendorRoute> },
+            { path: 'update-product/:id', element: <VendorRoute><UpdateProduct /></VendorRoute> },
 
             // 🛠 Admin
-            { path: 'all-users', element: <AdminRoute><AllUsers></AllUsers></AdminRoute> },
-            { path: 'all-products', element: <AdminRoute><AllProducts></AllProducts></AdminRoute> },
-            { path: 'all-ads', element: <AdminRoute><AllAdvertisementsAdmin></AllAdvertisementsAdmin></AdminRoute> },
-            { path: 'all-orders', element: <AdminRoute><AllOrdersPage></AllOrdersPage></AdminRoute> },
+            { path: 'all-users', element: <AdminRoute><AllUsers /></AdminRoute> },
+            { path: 'all-products', element: <AdminRoute><AllProducts /></AdminRoute> },
+            { path: 'all-ads', element: <AdminRoute><AllAdvertisementsAdmin /></AdminRoute> },
+            { path: 'all-orders', element: <AdminRoute><AllOrdersPage /></AdminRoute> },
+
+
+            { path: '*', element: <DashboardError /> },
         ]
     }
 ]);
