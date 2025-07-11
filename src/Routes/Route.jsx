@@ -25,6 +25,12 @@ import AllOrdersPage from '../Pages/DashBoard/AllOrdersPage/AllOrdersPage';
 import AccessDenied from '../Pages/AccessDenied/AccessDenied';
 import AdminRoute from './AdminRoute';
 import VendorRoute from './VendorRoute';
+import AboutUs from '../Pages/FooterComponent/AboutUs';
+import Contact from '../Pages/FooterComponent/Contact';
+import Terms from '../Pages/FooterComponent/Terms';
+import Privacy from '../Pages/FooterComponent/Privacy';
+import Refund from '../Pages/FooterComponent/Refund';
+import Help from '../Pages/FooterComponent/Help';
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +42,12 @@ export const router = createBrowserRouter([
             { path: 'products/:id', element: <PrivateRoute><ProductDetailsPage /></PrivateRoute> },
             { path: '/payment/:id', element: <PrivateRoute><Payment /></PrivateRoute> },
             { path: '/access-denied', element: <AccessDenied /> },
+            { path: '/aboutUs', element: <AboutUs /> },
+            { path: '/contact', element: <Contact /> },
+            { path: '/terms', element: <Terms /> },
+            { path: '/privacy', element: <Privacy /> },
+            { path: '/refund', element: <Refund /> },
+            { path: '/help', element: <Help /> },
             { path: '*', element: <NotFound /> },
         ],
     },
