@@ -123,10 +123,10 @@ const MyProducts = () => {
                                         </td>
                                         <td
                                             className={`px-5 py-3 capitalize ${p.status === "rejected"
-                                                    ? "text-red-600 underline cursor-help"
-                                                    : p.status === "approved"
-                                                        ? "text-green-600"
-                                                        : "text-yellow-500"
+                                                ? "text-red-600 underline cursor-help"
+                                                : p.status === "approved"
+                                                    ? "text-green-600"
+                                                    : "text-yellow-500"
                                                 }`}
                                             title={p.status === "rejected" ? p.rejectionReason : ""}
                                         >

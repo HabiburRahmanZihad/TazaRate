@@ -4,8 +4,11 @@ import { useParams, useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
+import { MdEditNote } from "react-icons/md";
 import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
+
 
 const UpdateProduct = () => {
     const { id } = useParams();
@@ -19,49 +22,41 @@ const UpdateProduct = () => {
     const {
         register,
         handleSubmit,
-        reset,
         control,
+        reset,
         watch,
         formState: { errors },
     } = useForm({
-        defaultValues: {
-            date: new Date(),
-            status: "pending",
-        },
+        defaultValues: { date: new Date(), status: "pending" },
     });
 
     const imageFile = watch("image");
 
     useEffect(() => {
-        async function fetchProduct() {
+        const fetchData = async () => {
             try {
                 const { data } = await axiosSecure.get(`/products/${id}`);
                 data.date = data.date ? new Date(data.date) : new Date();
                 reset(data);
-                setImagePreview(data.imageUrl || null);
                 setExistingData(data);
-                setLoading(false);
-            } catch (err) {
-                console.error("Failed to fetch product:", err);
+                setImagePreview(data.imageUrl || null);
+            } catch {
                 Swal.fire("Error", "Failed to load product data.", "error");
+            } finally {
                 setLoading(false);
             }
-        }
-
-        fetchProduct();
+        };
+        fetchData();
     }, [id, reset, axiosSecure]);
 
     useEffect(() => {
-        if (imageFile && imageFile.length > 0) {
+        if (imageFile?.[0]) {
             const file = imageFile[0];
             const previewUrl = URL.createObjectURL(file);
-            setImagePreview((prev) => {
-                if (prev && prev.startsWith("blob:")) {
-                    URL.revokeObjectURL(prev);
-                }
+            setImagePreview(prev => {
+                if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
                 return previewUrl;
             });
-
             return () => URL.revokeObjectURL(previewUrl);
         }
     }, [imageFile]);
@@ -69,55 +64,44 @@ const UpdateProduct = () => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-
             if (!existingData) {
-                Swal.fire("Error", "Product data not loaded. Try again.", "error");
+                Swal.fire("Error", "Product data not loaded.", "error");
                 return;
             }
 
             let imageUrl = existingData.imageUrl;
 
-            if (imageFile && imageFile.length > 0) {
+            if (imageFile?.[0]) {
                 imageUrl = await uploadImageToImgbb(imageFile[0]);
-                if (!imageUrl) {
-                    throw new Error("Image upload failed");
-                }
+                if (!imageUrl) throw new Error("Image upload failed");
             }
 
-            const currentDate = data.date.toISOString().split("T")[0];
+            const dateStr = data.date.toISOString().split("T")[0];
             const newPrice = parseFloat(data.pricePerUnit);
 
             const updatedPrices = [...(existingData?.prices || [])];
-            const lastEntry = updatedPrices[updatedPrices.length - 1];
-            if (!lastEntry || lastEntry.price !== newPrice || lastEntry.date !== currentDate) {
-                updatedPrices.push({ date: currentDate, price: newPrice });
+            const last = updatedPrices[updatedPrices.length - 1];
+            if (!last || last.price !== newPrice || last.date !== dateStr) {
+                updatedPrices.push({ date: dateStr, price: newPrice });
             }
 
             const updatedProduct = {
-                vendorEmail: data.vendorEmail,
-                vendorName: data.vendorName,
-                marketName: data.marketName,
-                date: currentDate,
-                description: data.description,
-                itemName: data.itemName,
-                itemNote: data.itemNote || "",
-                status: data.status,
-                pricePerUnit: newPrice,
+                ...data,
+                date: dateStr,
                 imageUrl,
+                pricePerUnit: newPrice,
                 prices: updatedPrices,
             };
 
             const res = await axiosSecure.put(`/products/${id}`, updatedProduct);
-
-            if (res.data.modifiedCount > 0 || res.data.success) {
-                Swal.fire("Success", "Product updated successfully!", "success");
+            if (res.data.modifiedCount || res.data.success) {
+                Swal.fire("Success", "Product updated!", "success");
                 navigate("/dashboard/my-products");
             } else {
                 Swal.fire("Info", "No changes made.", "info");
             }
         } catch (err) {
-            console.error("Error updating product:", err);
-            Swal.fire("Error", err.message || "Failed to update product.", "error");
+            Swal.fire("Error", err.message || "Update failed.", "error");
         } finally {
             setLoading(false);
         }
@@ -126,177 +110,164 @@ const UpdateProduct = () => {
     if (loading) return <p className="text-center py-10">Loading product...</p>;
 
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-primary">Update Product</h2>
+        <div className="max-w-4xl mx-auto px-4 md:px-8 py-10 bg-white rounded-xl shadow-lg">
+            <div className="flex items-center gap-2 mb-8 justify-center">
+                <MdEditNote className="text-3xl text-secondary" />
+                <h2 className="text-3xl font-bold text-secondary text-center">Update Product</h2>
+            </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Vendor Email */}
                 <div>
-                    <label htmlFor="vendorEmail" className="block font-medium">Vendor Email</label>
+                    <label className="block font-medium mb-1">Vendor Email</label>
                     <input
-                        id="vendorEmail"
                         type="email"
                         {...register("vendorEmail")}
                         readOnly
-                        className="input input-bordered w-full"
+                        className="w-full border border-secondary bg-gray-100 px-4 py-2 rounded-md focus:outline-none"
                     />
                 </div>
 
+                {/* Vendor Name */}
                 <div>
-                    <label htmlFor="vendorName" className="block font-medium">Vendor Name</label>
+                    <label className="block font-medium mb-1">Vendor Name</label>
                     <input
-                        id="vendorName"
                         type="text"
                         {...register("vendorName")}
                         readOnly
-                        className="input input-bordered w-full"
+                        className="w-full border border-secondary bg-gray-100 px-4 py-2 rounded-md focus:outline-none"
                     />
                 </div>
 
-                <div>
-                    <label htmlFor="marketName" className="block font-medium">Market Name</label>
+                {/* Market Name */}
+                <div className="md:col-span-2">
+                    <label className="block font-medium mb-1">Market Name</label>
                     <input
-                        id="marketName"
                         {...register("marketName", { required: "Market name is required" })}
-                        className="input input-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
                     />
-                    {errors.marketName && (
-                        <p className="text-red-500 text-sm">{errors.marketName.message}</p>
-                    )}
+                    {errors.marketName && <p className="text-red-500 text-sm">{errors.marketName.message}</p>}
                 </div>
 
+                {/* Date */}
                 <div>
-                    <label htmlFor="date" className="block font-medium">Date</label>
+                    <label className="block font-medium mb-1">Date</label>
                     <Controller
-                        control={control}
                         name="date"
+                        control={control}
                         render={({ field }) => (
                             <DatePicker
-                                id="date"
                                 {...field}
                                 selected={field.value}
-                                className="input input-bordered w-full"
+                                className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
                                 dateFormat="yyyy-MM-dd"
                             />
                         )}
                     />
                 </div>
 
+                {/* Price */}
                 <div>
-                    <label htmlFor="description" className="block font-medium">Market Description</label>
-                    <textarea
-                        id="description"
-                        {...register("description", { required: "Description is required" })}
-                        className="textarea textarea-bordered w-full"
-                        rows={3}
+                    <label className="block font-medium mb-1">Price per Unit (৳)</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        {...register("pricePerUnit", { required: "Price is required" })}
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
                     />
-                    {errors.description && (
-                        <p className="text-red-500 text-sm">{errors.description.message}</p>
-                    )}
+                    {errors.pricePerUnit && <p className="text-red-500 text-sm">{errors.pricePerUnit.message}</p>}
                 </div>
 
-                <div>
-                    <label htmlFor="itemName" className="block font-medium">Item Name</label>
+                {/* Item Name */}
+                <div className="md:col-span-2">
+                    <label className="block font-medium mb-1">Item Name</label>
                     <input
-                        id="itemName"
                         {...register("itemName", { required: "Item name is required" })}
-                        className="input input-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
                     />
-                    {errors.itemName && (
-                        <p className="text-red-500 text-sm">{errors.itemName.message}</p>
-                    )}
+                    {errors.itemName && <p className="text-red-500 text-sm">{errors.itemName.message}</p>}
                 </div>
 
-                {/* 📝 Optional Item Description */}
-                <div>
-                    <label htmlFor="itemNote" className="block font-medium">
-                        📝 Item Description
-                    </label>
+                {/* Item Description */}
+                <div className="md:col-span-2">
+                    <label className="block font-medium mb-1">Item Description (Optional)</label>
                     <textarea
-                        id="itemNote"
                         {...register("itemNote")}
-                        className="textarea textarea-bordered w-full"
-                        placeholder="e.g., Freshly harvested, organic quality"
-                        rows={2}
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
+                        placeholder="e.g., Organic, freshly picked"
                     />
                 </div>
 
-                <div>
-                    <label htmlFor="status" className="block font-medium">Status</label>
-                    <input
-                        id="status"
-                        type="text"
-                        readOnly
-                        value="Pending"
-                        {...register("status")}
-                        className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                {/* Market Description */}
+                <div className="md:col-span-2">
+                    <label className="block font-medium mb-1">Market Description</label>
+                    <textarea
+                        {...register("description", { required: "Description is required" })}
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none"
                     />
+                    {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
                 </div>
 
-                <div>
-                    <label htmlFor="image" className="block font-medium">Product Image</label>
+                {/* Image Upload */}
+                <div className="md:col-span-2">
+                    <label className="block font-medium mb-1">Product Image</label>
                     <input
-                        id="image"
                         type="file"
                         accept="image/*"
                         {...register("image", {
                             validate: {
                                 fileType: (files) =>
-                                    !files[0] || files[0].type.startsWith("image/") || "Only image files are allowed",
+                                    !files[0] || files[0].type.startsWith("image/") || "Only image files allowed",
                                 fileSize: (files) =>
-                                    !files[0] || files[0].size < 2 * 1024 * 1024 || "Max file size is 2MB",
-                            },
-                            onChange: (e) => {
-                                const file = e.target.files[0];
-                                if (file) {
-                                    const previewUrl = URL.createObjectURL(file);
-                                    setImagePreview((prev) => {
-                                        if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
-                                        return previewUrl;
-                                    });
-                                } else {
-                                    setImagePreview(existingData?.imageUrl || null);
-                                }
+                                    !files[0] || files[0].size < 2 * 1024 * 1024 || "Max file size is 2MB"
                             }
                         })}
-                        className="file-input file-input-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-secondary file:text-white"
                     />
-                    {errors.image && (
-                        <p className="text-red-500 text-sm">{errors.image.message}</p>
-                    )}
-
+                    {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
                     {imagePreview && (
-                        <img
-                            src={imagePreview}
-                            alt="Product Preview"
-                            className="mt-2 w-32 h-32 object-cover rounded"
-                        />
+                        <div className="mt-4">
+                            <p className="text-sm font-medium mb-1">Image Preview:</p>
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="w-full max-h-64 object-contain rounded-lg border border-secondary"
+                            />
+                        </div>
                     )}
                 </div>
 
+                {/* Status */}
                 <div>
-                    <label htmlFor="pricePerUnit" className="block font-medium">
-                        Price per Unit (e.g., ৳30/kg)
-                    </label>
+                    <label className="block font-medium mb-1">Status</label>
                     <input
-                        id="pricePerUnit"
-                        type="number"
-                        step="0.01"
-                        {...register("pricePerUnit", { required: "Price is required" })}
-                        className="input input-bordered w-full"
+                        type="text"
+                        readOnly
+                        {...register("status")}
+                        className="w-full border border-secondary bg-gray-100 px-4 py-2 rounded-md focus:outline-none"
                     />
-                    {errors.pricePerUnit && (
-                        <p className="text-red-500 text-sm">{errors.pricePerUnit.message}</p>
-                    )}
                 </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="btn btn-primary w-full"
-                >
-                    {loading ? "Updating..." : "Update Product"}
-                </button>
+                {/* Submit Button */}
+                <div className="md:col-span-2">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="btn bg-secondary text-white hover:bg-secondary/90 w-full flex justify-center items-center gap-2"
+                    >
+                        {loading ? (
+                            "Updating..."
+                        ) : (
+                            <>
+                                <MdEditNote className="text-lg" />
+                                Update Product
+                            </>
+                        )}
+                    </button>
+                </div>
             </form>
+
         </div>
     );
 };
