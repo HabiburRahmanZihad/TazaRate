@@ -1,23 +1,19 @@
 import { useForm } from "react-hook-form";
-import {  useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
 import useAuth from "../../../hooks/useAuth";
+import { MdCampaign } from "react-icons/md";
 
 const AddAdvertisement = () => {
-    const { user } = useAuth(); // Assuming you have AuthContext to get user info
-
+    const { user } = useAuth();
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm({
-        defaultValues: {
-            status: "pending",
-        },
-    });
+    } = useForm({ defaultValues: { status: "pending" } });
 
     const axiosSecure = useAxiosSecure();
     const [loading, setLoading] = useState(false);
@@ -44,8 +40,6 @@ const AddAdvertisement = () => {
                 vendorName: user?.displayName || "",
             };
 
-            console.log("Ad Data:", adData);
-
             const res = await axiosSecure.post("/advertisements", adData);
 
             if (res.data.insertedId) {
@@ -65,33 +59,41 @@ const AddAdvertisement = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-primary">📢 Add Advertisement</h2>
+            <div className="flex items-center gap-2 mb-6 justify-center">
+                <MdCampaign className="text-3xl text-secondary" />
+                <h2 className="text-2xl font-bold text-secondary">Add Advertisement</h2>
+            </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                {/* Title */}
                 <div>
-                    <label className="block font-medium">Ad Title</label>
+                    <label className="block font-medium mb-1">Ad Title</label>
                     <input
                         {...register("title", { required: "Title is required" })}
-                        className="input input-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
                         type="text"
+                        placeholder="Enter title"
                     />
                     {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                 </div>
 
+                {/* Description */}
                 <div>
-                    <label className="block font-medium">Short Description</label>
+                    <label className="block font-medium mb-1">Short Description</label>
                     <textarea
                         {...register("shortDescription", { required: "Description is required" })}
-                        className="textarea textarea-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
                         rows={3}
+                        placeholder="Brief description of your ad"
                     />
                     {errors.shortDescription && (
                         <p className="text-red-500 text-sm">{errors.shortDescription.message}</p>
                     )}
                 </div>
 
+                {/* Image Upload */}
                 <div>
-                    <label className="block font-medium">Upload Image</label>
+                    <label className="block font-medium mb-1">Upload Image</label>
                     <input
                         type="file"
                         accept="image/*"
@@ -112,29 +114,42 @@ const AddAdvertisement = () => {
                                 setPreview(URL.createObjectURL(file));
                             },
                         })}
-                        className="file-input file-input-bordered w-full"
+                        className="w-full border border-secondary px-4 py-2 rounded-md file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-secondary file:text-white focus:outline-none focus:ring-2 focus:ring-secondary"
                     />
                     {preview && (
-                        <img
-                            src={preview}
-                            alt="Ad Preview"
-                            className="mt-2 w-40 h-40 object-cover rounded shadow"
-                        />
+                        <div className="mt-3">
+                            <img
+                                src={preview}
+                                alt="Ad Preview"
+                                className="w-40 h-40 object-cover rounded-md border border-secondary shadow"
+                            />
+                        </div>
                     )}
                 </div>
 
+                {/* Status */}
                 <div>
-                    <label className="block font-medium">Status</label>
+                    <label className="block font-medium mb-1">Status</label>
                     <input
                         value="Pending"
                         readOnly
                         {...register("status")}
-                        className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                        className="w-full border border-secondary bg-gray-100 px-4 py-2 rounded-md cursor-not-allowed text-gray-500"
                     />
                 </div>
 
-                <button type="submit" disabled={loading} className="btn btn-primary w-full">
-                    {loading ? "Submitting..." : "Submit Advertisement"}
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-secondary text-white rounded-md hover:bg-secondary/90 transition disabled:opacity-50"
+                >
+                    {loading ? "Submitting..." : (
+                        <>
+                            <MdCampaign className="text-xl" />
+                            Submit Advertisement
+                        </>
+                    )}
                 </button>
             </form>
         </div>
