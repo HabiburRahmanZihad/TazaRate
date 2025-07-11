@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router';
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../Components/Shared/Footer/Footer';
 import Navbar from '../Components/Shared/Navbar/Navbar';
 
@@ -12,18 +12,22 @@ const Root = () => {
     }, [location.pathname]);
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-base-100 ">
             <Navbar />
 
-            <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: 'easeInOut' }}
-                className="flex-grow container mx-auto px-2 sm:px-4 lg:px-6"
-            >
-                <Outlet />
-            </motion.div>
+            {/* Animated Page Wrapper with AnimatePresence */}
+            <AnimatePresence mode="wait">
+                <motion.main
+                    key={location.pathname}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="flex-grow w-full container mx-auto px-2  py-6"
+                >
+                    <Outlet />
+                </motion.main>
+            </AnimatePresence>
 
             <Footer />
         </div>

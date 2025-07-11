@@ -1,53 +1,82 @@
 import { useQuery } from "@tanstack/react-query";
-
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import { motion } from 'framer-motion';
 import 'swiper/css';
-import 'swiper/css/autoplay';
-import { Autoplay, Pagination } from 'swiper/modules';
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AdvertisementHighlights = () => {
     const axiosSecure = useAxiosSecure();
-
     const { data: ads = [], isLoading, error } = useQuery({
         queryKey: ['acceptedAds'],
-        queryFn: async () => {
-            const res = await axiosSecure.get('/advertisements/accepted');
-            return res.data;
-        }
+        queryFn: async () => (await axiosSecure.get('/advertisements/accepted')).data
     });
 
-    if (isLoading) return <p className="text-center">Loading advertisements...</p>;
-    if (error) return <p className="text-red-600 text-center">Failed to load ads</p>;
+    if (isLoading) return <p className="text-center text-neutral">Loading awesome deals...</p>;
+    if (error) return <p className="text-center text-error">Oops! Something went wrong.</p>;
 
     return (
-        <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-4 text-center">🎯 Advertisement Highlights</h2>
+        <div className="bg-base-100 py-12 rounded-xl">
+            <motion.h2
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-3xl md:text-4xl font-extrabold text-center mb-10 text-neutral bg-clip-text bg-gradient-to-r from-primary to-accent drop-shadow-sm"
+            >
+                Spotlight Offers You Can't Miss!
+            </motion.h2>
 
             <Swiper
                 spaceBetween={20}
                 slidesPerView={1}
-                autoplay={{ delay: 3000 }}
-                pagination={{ clickable: true }}
-                modules={[Autoplay, Pagination]}
-                loop={true}
+                autoplay={{ delay: 3500 }}
+                modules={[Autoplay]}
+                loop
             >
                 {ads.map(ad => (
                     <SwiperSlide key={ad._id}>
-                        <div className="bg-white p-6 rounded shadow flex flex-col md:flex-row items-center gap-6">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                            viewport={{ once: true }}
+                            className="bg-base-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row md:h-72"
+                        >
                             <img
                                 src={ad.imageUrl}
                                 alt={ad.adTitle}
-                                className="w-full md:w-1/3 rounded object-cover"
+                                className="w-full md:w-1/2 h-64 md:h-full object-cover object-center"
                             />
-                            <div className="flex-1">
-                                <h3 className="text-xl font-semibold mb-2">{ad.adTitle}</h3>
-                                <p className="text-gray-600">{ad.shortDescription}</p>
-                                <p className="mt-2 text-sm text-gray-500">
+                            <div className="p-6 md:p-8 flex flex-col justify-center text-center md:text-left">
+                                <motion.h3
+                                    className="text-2xl font-bold text-neutral mb-2"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.6 }}
+                                    viewport={{ once: true }}
+                                >
+                                    {ad.adTitle}
+                                </motion.h3>
+                                <motion.p
+                                    className="text-base text-neutral/80 mb-3"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3, duration: 0.6 }}
+                                    viewport={{ once: true }}
+                                >
+                                    {ad.shortDescription}
+                                </motion.p>
+                                <motion.p
+                                    className="text-sm text-accent font-medium"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4, duration: 0.6 }}
+                                    viewport={{ once: true }}
+                                >
                                     By: {ad.vendorName}
-                                </p>
+                                </motion.p>
                             </div>
-                        </div>
+                        </motion.div>
                     </SwiperSlide>
                 ))}
             </Swiper>

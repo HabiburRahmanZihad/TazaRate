@@ -1,45 +1,32 @@
 import { motion } from 'framer-motion';
 import Banner from '../../Components/Home/Banner/Banner';
-import ProductSection from '../../Components/Home/ProductSection/ProductSection';
 import AdvertisementHighlights from '../../Components/Home/AdvertisementHighlights/AdvertisementHighlights';
+import ProductSection from '../../Components/Home/ProductSection/ProductSection';
+import HowItWorks from '../../Components/Home/HowItWorks/HowItWorks';
+import Testimonials from '../../Components/Home/Testimonials/Testimonials';
 
+const Home = () => (
+    <div className="space-y-16 lg:space-y-28">
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <Banner />
+        </motion.section>
 
-const Home = () => {
-    return (
-        <div className="space-y-16 lg:space-y-24">
-            {/* Banner Section with Framer Motion */}
-            <motion.section
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-            >
-                <Banner />
-            </motion.section>
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}>
+            <ProductSection />
+        </motion.section>
 
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
+            <AdvertisementHighlights />
+        </motion.section>
 
-            {/* Advertisement Highlights Section */}
-            <motion.section
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-            >
-                <AdvertisementHighlights />
-            </motion.section>
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
+            <HowItWorks />
+        </motion.section>
 
-
-
-            {/* Product Section - Display 6 product cards */}
-            <motion.section
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="container mx-auto px-4"
-            >
-                <ProductSection />
-            </motion.section>
-
-        </div>
-    );
-};
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            <Testimonials />
+        </motion.section>
+    </div>
+);
 
 export default Home;

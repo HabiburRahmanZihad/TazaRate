@@ -1,110 +1,102 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
-
-
+import { FaShoppingBasket, FaCalendarAlt, FaSearch, FaStore, FaArrowRight } from 'react-icons/fa';
 
 const ProductSection = () => {
     const [products, setProducts] = useState([]);
     const { user } = useAuth();
-    const navigate = useNavigate();
+    const nav = useNavigate();
 
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_API_URL}/public/products?limit=6&sortBy=createdAt&order=desc`)
             .then(res => setProducts(res.data.products))
-            .catch(err => console.error("Failed to load products", err));
+            .catch(console.error);
     }, []);
 
-    const handleViewDetails = (id) => {
-        if (!user) {
-            navigate('/signin');
-        } else {
-            navigate(`/products/${id}`);
-        }
-    };
+    const isRecent = dateStr => (Date.now() - new Date(dateStr)) / (1000 * 60 * 60 * 24) <= 3;
 
-    const isRecent = (dateStr) => {
-        const productDate = new Date(dateStr);
-        const today = new Date();
-        const diffTime = today - productDate;
-        const diffDays = diffTime / (1000 * 60 * 60 * 24);
-        return diffDays <= 3; // show recent (last 3 days)
-    };
-
-     return (
-        <section className="py-16 bg-gray-50">
-            <div className="container mx-auto px-4">
-                <motion.div
-                    className="text-center mb-12"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+    return (
+        <section className="py-16 bg-base-200 rounded-xl">
+            <div >
+                {/* Section Title */}
+                <motion.div className="text-center mb-12"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
                 >
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-                        Latest Market Updates
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-neutral mb-4">
+                        Freshest Market Updates
                     </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Stay updated with the freshest prices from local markets across the city
+                    <p className="text-base md:text-lg text-neutral max-w-2xl mx-auto">
+                        Stay on top of local prices with real-time insights from TazaRate.
                     </p>
                 </motion.div>
 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {products.map((product, index) => (
+                {/* Product Cards */}
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {products.map((p, i) => (
                         <motion.div
-                            key={product._id}
-                            className="bg-white shadow-md rounded-lg overflow-hidden"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: index * 0.1 }}
+                            key={p._id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: i * 0.1 }}
+                            viewport={{ once: true }}
+                            className="bg-base-100 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full"
                         >
                             <img
-                                src={product.imageUrl}
-                                alt={product.itemName}
-                                className="w-full h-48 object-cover"
+                                src={p.imageUrl}
+                                alt={p.itemName}
+                                className="w-full h-[250px] object-cover object-center"
                             />
-                            <div className="p-4 space-y-2">
-                                <h3 className="text-xl font-semibold capitalize">{product.itemName}</h3>
-                                <p className="text-gray-600 text-sm">
-                                    🛒 {product.marketName} • 📅 {new Date(product.date).toLocaleDateString()}
-                                    {isRecent(product.date) && <span className="ml-2 text-green-600 font-medium">• Recent</span>}
+                            <div className="p-5 flex flex-col flex-grow">
+                                <h3 className="text-xl font-semibold text-neutral mb-1 line-clamp-1 capitalize">
+                                    {p.itemName}
+                                </h3>
+                                <p className="text-sm text-neutral flex items-center gap-2 mb-2">
+                                    <FaStore className="text-primary" />
+                                    {p.marketName}
+                                    <FaCalendarAlt className="ml-4 text-primary" />
+                                    {new Date(p.date).toLocaleDateString()}
+                                    {isRecent(p.date) && <span className="ml-2 text-primary font-medium">• Recent</span>}
                                 </p>
-
-                                <ul className="text-sm text-gray-700 space-y-1">
-                                    {product.prices?.slice(0, 3).map((entry, i) => (
-                                        <li key={i}>
-                                            🧺 {new Date(entry.date).toLocaleDateString()} — ৳{entry.price}
+                                <ul className="text-sm text-neutral space-y-1 mb-3 flex-grow overflow-hidden">
+                                    {p.prices.slice(0, 3).map((e, j) => (
+                                        <li key={j} className="flex items-center gap-2">
+                                            <FaShoppingBasket className="text-accent" />
+                                            {new Date(e.date).toLocaleDateString()} — ৳{e.price}
                                         </li>
                                     ))}
-                                    {product.prices.length > 3 && (
-                                        <li className="text-gray-400 italic">+ more entries</li>
-                                    )}
+                                    {p.prices.length > 3 && <li className="italic text-neutral">+ more entries</li>}
                                 </ul>
-
                                 <button
-                                    onClick={() => handleViewDetails(product._id)}
-                                    className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded transition"
+                                    onClick={() => nav(user ? `/products/${p._id}` : '/signin')}
+                                    className="btn btn-primary btn-sm mt-auto w-full flex items-center justify-center gap-2"
                                 >
-                                    🔍 View Details
+                                    <FaSearch /> View Details
                                 </button>
                             </div>
                         </motion.div>
                     ))}
                 </div>
 
+                {/* View All Button */}
                 <motion.div
-                    className="text-center mt-12"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="text-center mt-12 flex justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    viewport={{ once: true }}
                 >
-                    <Link
-                        to="/products"
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-300"
+                    <button
+                        onClick={() => nav('/products')}
+                        className="btn btn-secondary btn-lg flex items-center justify-center gap-2"
                     >
-                        View All Products
-                    </Link>
+                        View All Products <FaArrowRight />
+                    </button>
                 </motion.div>
             </div>
         </section>
