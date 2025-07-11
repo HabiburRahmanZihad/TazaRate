@@ -9,15 +9,16 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { motion } from "framer-motion";
 
 const ViewPriceTrends = () => {
     const [products, setProducts] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
-    const axiosSecure = useAxiosSecure()
+    const axiosSecure = useAxiosSecure();
 
-    // Fetch all approved products
+    // Fetch approved products
     useEffect(() => {
         const fetchAllProducts = async () => {
             try {
@@ -38,9 +39,10 @@ const ViewPriceTrends = () => {
         }
     }, [products, selectedId]);
 
-    // Fetch product by ID
+    // Fetch selected product data
     useEffect(() => {
         if (!selectedId) return;
+
         const fetchProduct = async () => {
             setLoading(true);
             try {
@@ -52,100 +54,117 @@ const ViewPriceTrends = () => {
                 setLoading(false);
             }
         };
+
         fetchProduct();
     }, [selectedId, axiosSecure]);
 
-    const priceData = product?.prices?.map((entry) => ({
-        date: entry.date,
-        price: entry.price,
-    })) || [];
+    const priceData =
+        product?.prices?.map((entry) => ({
+            date: entry.date,
+            price: entry.price,
+        })) || [];
 
     const trendChange = () => {
         const len = priceData.length;
         if (len < 2) return null;
         const change = priceData[len - 1].price - priceData[len - 2].price;
         const percentage = ((change / priceData[len - 2].price) * 100).toFixed(1);
-        return change >= 0 ? `+${percentage}%` : `${percentage}%`;
+        return change >= 0 ? `📈 +${percentage}%` : `📉 ${percentage}%`;
     };
 
     return (
-        <div className="max-w-6xl mx-auto p-4 md:p-6">
-            <h2 className="text-2xl font-bold mb-6">📈 View Price Trends</h2>
+        <div className="py-10 space-y-8">
+            <h2 className="text-3xl font-extrabold text-center text-secondary">
+                📊 Real-Time Price Trends
+            </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                {/* Sidebar: Tracked Items */}
-                <div className="md:col-span-1">
-                    <div className="bg-base-100 shadow-md rounded p-4 space-y-2">
-                        <p className="text-lg font-semibold">Tracked Items</p>
-                        {products.map((item) => (
-                            <button
-                                key={item._id}
-                                onClick={() => {
-                                    setSelectedId(item._id);
-                                    setLoading(true);
-                                }}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-md w-full text-left hover:bg-orange-100 ${selectedId === item._id ? "bg-orange-200 font-semibold" : ""}`}
-                            >
-                                <span>🍅</span>
-                                <span>{item.itemName}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {/* Sidebar */}
+                <motion.div
+                    className="md:col-span-1 bg-white shadow rounded-lg p-4 space-y-2 overflow-y-auto max-h-[500px]"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    <p className="md:text-lg font-semibold text-gray-700">🛒Tracked Items</p>
+                    {products.map((item) => (
+                        <button
+                            key={item._id}
+                            onClick={() => setSelectedId(item._id)}
+                            className={`flex items-center gap-2 px-1 py-2 rounded-lg w-full text-left transition-all duration-200 hover:bg-orange-100 text-sm ${
+                                selectedId === item._id
+                                    ? "bg-orange-200 font-semibold text-orange-900"
+                                    : "text-gray-700"
+                            }`}
+                        >
+                            <span>🧺</span>
+                            <span className="truncate">{item.itemName}</span>
+                        </button>
+                    ))}
+                </motion.div>
 
-                {/* Chart & Info */}
-                <div className="md:col-span-4">
-                    <div className="bg-base-100 shadow-md rounded p-6">
-                        {loading || !product ? (
-                            <div className="flex justify-center items-center h-60">
-                                <span className="loading loading-spinner text-primary w-10 h-10"></span>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-xl font-semibold">{product.itemName}</h3>
-                                        <p className="text-sm text-gray-500">
-                                            {product.marketName} — Vendor: {product.vendorName}
-                                        </p>
-                                    </div>
-                                    <div
-                                        className={`badge text-white capitalize ${product.status === "approved"
-                                            ? "bg-green-600"
-                                            : "bg-yellow-600"
-                                            }`}
-                                    >
-                                        {product.status}
-                                    </div>
+                {/* Chart Area */}
+                <motion.div
+                    className="md:col-span-4 bg-white shadow-lg rounded-lg p-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    {loading || !product ? (
+                        <div className="flex justify-center items-center h-72">
+                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+                                <div>
+                                    <h3 className="text-2xl font-semibold text-gray-800">
+                                        {product.itemName}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">
+                                        {product.marketName} — Vendor: {product.vendorName}
+                                    </p>
                                 </div>
+                                <div
+                                    className={`badge px-4 py-1 rounded-full text-white text-sm ${
+                                        product.status === "approved"
+                                            ? "bg-green-500"
+                                            : "bg-yellow-500"
+                                    }`}
+                                >
+                                    {product.status}
+                                </div>
+                            </div>
 
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <LineChart
-                                        data={priceData}
-                                        margin={{ top: 10, right: 30, bottom: 0, left: 0 }}
-                                    >
+                            <div className="w-full h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={priceData}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="date" />
-                                        <YAxis />
-                                        <Tooltip formatter={(value) => [`৳${value}`, "Price"]} />
+                                        <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                                        <YAxis tick={{ fontSize: 12 }} />
+                                        <Tooltip
+                                            formatter={(value) => [`৳${value}`, "Price"]}
+                                            labelStyle={{ fontWeight: 600 }}
+                                        />
                                         <Line
                                             type="monotone"
                                             dataKey="price"
-                                            stroke="#3B82F6"
-                                            activeDot={{ r: 8 }}
+                                            stroke="#FB923C"
+                                            strokeWidth={2.5}
+                                            activeDot={{ r: 6 }}
                                         />
                                     </LineChart>
                                 </ResponsiveContainer>
+                            </div>
 
-                                {trendChange() && (
-                                    <p className="mt-4 text-sm font-medium text-green-600">
-                                        Trend: {trendChange()} last 7 days
-                                    </p>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </div>
+                            {trendChange() && (
+                                <div className="mt-4 text-sm font-medium text-center text-green-600">
+                                    {trendChange()} over last update
+                                </div>
+                            )}
+                        </>
+                    )}
+                </motion.div>
             </div>
         </div>
     );
