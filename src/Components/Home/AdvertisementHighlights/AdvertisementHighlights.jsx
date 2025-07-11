@@ -21,7 +21,7 @@ const AdvertisementHighlights = () => {
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-3xl md:text-4xl font-extrabold text-center mb-10 text-neutral bg-clip-text bg-gradient-to-r from-primary to-accent drop-shadow-sm"
+                className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center pb-2 mb-10 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
             >
                 Spotlight Offers You Can't Miss!
             </motion.h2>

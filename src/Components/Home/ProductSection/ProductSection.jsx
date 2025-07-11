@@ -28,7 +28,7 @@ const ProductSection = () => {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                 >
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-neutral mb-4">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-4">
                         Freshest Market Updates
                     </h2>
                     <p className="text-base md:text-lg text-neutral max-w-2xl mx-auto">

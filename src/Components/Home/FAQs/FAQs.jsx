@@ -39,7 +39,7 @@ const FAQs = () => {
     return (
         <section className="bg-base-200 py-16 rounded-xl">
             <div className="container mx-auto max-w-3xl px-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-neutral text-center mb-10">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary text-center mb-10">
                     Frequently Asked Questions
                 </h2>
                 <div className="space-y-4">
@@ -51,7 +51,7 @@ const FAQs = () => {
                             <div className="flex justify-between items-start cursor-pointer" onClick={() => toggleFAQ(i)}>
                                 <div className="flex items-start gap-3">
                                     <FaQuestionCircle className="text-primary mt-1" />
-                                    <h3 className="text-lg font-semibold text-primary">{faq.q}</h3>
+                                    <h3 className="text-lg font-semibold text-neutral">{faq.q}</h3>
                                 </div>
                                 <button className="text-secondary text-xl">
                                     {activeIndex === i ? <FaMinus /> : <FaPlus />}

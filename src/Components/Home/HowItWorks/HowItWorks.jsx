@@ -17,7 +17,7 @@ const cardVariants = {
 const HowItWorks = () => (
     <section className="bg-base-200 py-16 rounded-xl">
         <div className="container mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral mb-8">How It Works</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-8">How It Works</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
                 {[
                     {
