@@ -203,13 +203,13 @@ const AllProducts = () => {
                                             )}
                                             <Link
                                                 to={`/dashboard/update-product/${p._id}`}
-                                                className="flex items-center gap-1 btn btn-xs bg-blue-600 text-white"
+                                                className="flex items-center gap-1 btn btn-xs bg-primary text-white"
                                             >
                                                 <MdEdit /> Update
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(p._id)}
-                                                className="flex items-center gap-1 btn btn-xs bg-red-600 text-white"
+                                                className="flex items-center gap-1 btn btn-xs bg-red-500 text-white"
                                             >
                                                 <MdDelete /> Delete
                                             </button>

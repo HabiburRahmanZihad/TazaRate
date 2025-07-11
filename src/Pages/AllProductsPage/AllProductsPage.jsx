@@ -25,21 +25,17 @@ const AllProductsPage = () => {
     const navigate = useNavigate();
     const API = `${import.meta.env.VITE_API_URL}/public/products`;
 
-    // useRef to track mounted state
     const isMounted = useRef(true);
-
-    // Debounce searchQuery changes
     const [debouncedSearch, setDebouncedSearch] = useState(filters.searchQuery);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(filters.searchQuery);
-        }, 500); // 500ms debounce
+        }, 500);
 
         return () => clearTimeout(handler);
     }, [filters.searchQuery]);
 
-    // Reset page when filters change (except page itself)
     useEffect(() => {
         setPage(1);
     }, [filters.sortBy, filters.order, filters.startDate, filters.endDate, debouncedSearch]);
@@ -63,7 +59,6 @@ const AllProductsPage = () => {
                 },
             });
 
-            // Only update state if still mounted
             if (!isMounted.current) return;
 
             if (res.data && Array.isArray(res.data.products)) {
@@ -91,7 +86,6 @@ const AllProductsPage = () => {
     useEffect(() => {
         isMounted.current = true;
         fetchProducts();
-
         return () => {
             isMounted.current = false;
         };
@@ -116,7 +110,7 @@ const AllProductsPage = () => {
                 Market Product Listings
             </h2>
 
-            {/* Filters & Search Section */}
+            {/* Filters */}
             <div className="bg-base-200 rounded-xl p-6 shadow-sm border border-base-300 mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -127,7 +121,7 @@ const AllProductsPage = () => {
                             <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
+                                className="input input-sm input-bordered w-full pl-10"
                                 value={filters.startDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
                             />
@@ -141,14 +135,14 @@ const AllProductsPage = () => {
                             <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
+                                className="input input-sm input-bordered w-full pl-10"
                                 value={filters.endDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
                             />
                         </div>
                     </div>
 
-                    {/* Search Field */}
+                    {/* Search */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-neutral mb-1">Search</label>
                         <div className="relative">
@@ -156,40 +150,31 @@ const AllProductsPage = () => {
                             <input
                                 type="text"
                                 placeholder="Search by product or market"
-                                className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
+                                className="input input-sm input-bordered w-full pl-10"
                                 value={filters.searchQuery}
                                 onChange={(e) => setFilters((f) => ({ ...f, searchQuery: e.target.value }))}
                             />
                         </div>
                     </div>
 
-                    {/* Sort Dropdown + Reset */}
+                    {/* Sort Dropdown + Clear */}
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-neutral mb-1">Sort By</label>
-                            <div className="relative">
-                                <select
-                                    className="select select-sm w-full bg-base-100 border border-base-300 rounded-md text-sm text-neutral pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none"
-                                    value={`${filters.sortBy}_${filters.order}`}
-                                    onChange={(e) => {
-                                        const [sb, o] = e.target.value.split("_");
-                                        setFilters((f) => ({ ...f, sortBy: sb, order: o }));
-                                    }}
-                                    style={{
-                                        backgroundImage: `url("data:image/svg+xml;utf8,<svg fill='%23222222' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path d='M6 8l4 4 4-4H6z'/></svg>")`,
-                                        backgroundRepeat: "no-repeat",
-                                        backgroundPosition: "right 0.75rem center",
-                                        backgroundSize: "1rem",
-                                    }}
-                                >
-                                    <option value="createdAt_desc">Newest</option>
-                                    <option value="pricePerUnit_asc">Price – Low to High</option>
-                                    <option value="pricePerUnit_desc">Price – High to Low</option>
-                                </select>
-                            </div>
+                            <select
+                                className="select select-sm w-full"
+                                value={`${filters.sortBy}_${filters.order}`}
+                                onChange={(e) => {
+                                    const [sb, o] = e.target.value.split("_");
+                                    setFilters((f) => ({ ...f, sortBy: sb, order: o }));
+                                }}
+                            >
+                                <option value="createdAt_desc">Newest</option>
+                                <option value="pricePerUnit_asc">Price – Low to High</option>
+                                <option value="pricePerUnit_desc">Price – High to Low</option>
+                            </select>
                         </div>
-
-                        <button onClick={clearFilters} className="btn btn-secondary btn-sm w-full mt-auto focus:outline-none focus:ring-0">
+                        <button onClick={clearFilters} className="btn btn-secondary btn-sm w-full mt-auto">
                             Clear Filters
                         </button>
                     </div>
@@ -220,41 +205,19 @@ const AllProductsPage = () => {
                                     whileHover={{ scale: 1.01 }}
                                     layout
                                     layoutId={prod._id}
+                                    className="card bg-base-100 shadow-md rounded-lg overflow-hidden"
                                 >
-                                    {/* Image */}
-                                    <figure className="h-48 w-full overflow-hidden rounded-t-lg">
+                                    <figure className="h-48 w-full overflow-hidden">
                                         <img src={prod.imageUrl} alt={prod.itemName} className="object-cover w-full h-full" />
                                     </figure>
-
-                                    {/* Body */}
-                                    <div className="card-body p-4 flex flex-col justify-between flex-1">
-                                        <div className="space-y-1">
-                                            <h3 className="text-xl font-semibold text-neutral pb-2">{prod.itemName}</h3>
-
-                                            <div className="grid grid-cols-2 items-center gap-2">
-                                                <div className="flex items-center gap-2 text-neutral font-medium">
-                                                    <FaMoneyBillWave className="text-accent" />
-                                                    ৳ {prod.pricePerUnit}
-                                                </div>
-
-                                                <div className="flex items-center gap-2 text-neutral/70">
-                                                    <FaCalendarAlt className="text-accent" />
-                                                    {new Date(prod.date).toLocaleDateString()}
-                                                </div>
-
-                                                <div className="flex items-center gap-2 text-neutral/70">
-                                                    <FaMapMarkerAlt className="text-accent" />
-                                                    {prod.marketName}
-                                                </div>
-
-                                                <div className="flex items-center gap-2 text-neutral/70">
-                                                    <FaUserTag className="text-accent" />
-                                                    {prod.vendorName}
-                                                </div>
-                                            </div>
+                                    <div className="card-body p-4">
+                                        <h3 className="text-xl font-semibold">{prod.itemName}</h3>
+                                        <div className="mt-2 grid grid-cols-2 gap-2 text-sm text-neutral">
+                                            <div className="flex items-center gap-1"><FaMoneyBillWave /> ৳{prod.pricePerUnit}</div>
+                                            <div className="flex items-center gap-1"><FaCalendarAlt /> {new Date(prod.date).toLocaleDateString()}</div>
+                                            <div className="flex items-center gap-1"><FaMapMarkerAlt /> {prod.marketName}</div>
+                                            <div className="flex items-center gap-1"><FaUserTag /> {prod.vendorName}</div>
                                         </div>
-
-                                        {/* Button */}
                                         <button onClick={() => navigate(`/products/${prod._id}`)} className="btn btn-sm btn-secondary mt-4">
                                             View Details
                                         </button>
@@ -265,23 +228,15 @@ const AllProductsPage = () => {
                     </div>
 
                     {/* Pagination */}
-                    {totalPages > 1 && (
-                        <div className="flex justify-center items-center mt-8 gap-2">
-                            <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1} className="btn btn-sm btn-outline">
-                                Prev
-                            </button>
-                            <span className="btn btn-sm">
-                                {page} / {totalPages}
-                            </span>
-                            <button
-                                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                                disabled={page === totalPages}
-                                className="btn btn-sm btn-outline"
-                            >
-                                Next
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex justify-center items-center mt-8 gap-2">
+                        <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1} className="btn btn-sm btn-outline">
+                            Prev
+                        </button>
+                        <span className="btn btn-sm">{page} / {totalPages}</span>
+                        <button onClick={() => setPage((p) => Math.min(p + 1, totalPages))} disabled={page === totalPages} className="btn btn-sm btn-outline">
+                            Next
+                        </button>
+                    </div>
                 </>
             )}
         </div>
