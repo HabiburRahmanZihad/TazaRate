@@ -1,12 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUserTag, FaMoneyBillWave } from "react-icons/fa";
 import Loading from "../../Components/Loader/Loading";
 import NoFound from "../../Components/NoFound/NoFound";
-
-
 
 const PAGE_SIZE = 32;
 
@@ -22,35 +20,81 @@ const AllProductsPage = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     const API = `${import.meta.env.VITE_API_URL}/public/products`;
 
+    // useRef to track mounted state
+    const isMounted = useRef(true);
+
+    // Debounce searchQuery changes
+    const [debouncedSearch, setDebouncedSearch] = useState(filters.searchQuery);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(filters.searchQuery);
+        }, 500); // 500ms debounce
+
+        return () => clearTimeout(handler);
+    }, [filters.searchQuery]);
+
+    // Reset page when filters change (except page itself)
+    useEffect(() => {
+        setPage(1);
+    }, [filters.sortBy, filters.order, filters.startDate, filters.endDate, debouncedSearch]);
+
     const fetchProducts = useCallback(async () => {
         setLoading(true);
+        setError(null);
+        const source = axios.CancelToken.source();
+
         try {
             const res = await axios.get(API, {
+                cancelToken: source.token,
                 params: {
                     page,
                     limit: PAGE_SIZE,
                     sortBy: filters.sortBy,
                     order: filters.order,
-                    startDate: filters.startDate,
-                    endDate: filters.endDate,
-                    search: filters.searchQuery.trim(),
+                    startDate: filters.startDate || undefined,
+                    endDate: filters.endDate || undefined,
+                    search: debouncedSearch.trim() || undefined,
                 },
             });
-            setProducts(res.data.products);
-            setTotalCount(res.data.total);
+
+            // Only update state if still mounted
+            if (!isMounted.current) return;
+
+            if (res.data && Array.isArray(res.data.products)) {
+                setProducts(res.data.products);
+                setTotalCount(res.data.total || 0);
+            } else {
+                setProducts([]);
+                setTotalCount(0);
+                setError("Invalid data format received.");
+            }
         } catch (err) {
-            console.error("Error fetching products:", err);
+            if (!axios.isCancel(err)) {
+                console.error("Error fetching products:", err);
+                if (isMounted.current) setError("Failed to load products. Please try again.");
+            }
         } finally {
-            setLoading(false);
+            if (isMounted.current) setLoading(false);
         }
-    }, [API, page, filters]);
+
+        return () => {
+            source.cancel("Component unmounted");
+        };
+    }, [API, page, filters.sortBy, filters.order, filters.startDate, filters.endDate, debouncedSearch]);
 
     useEffect(() => {
+        isMounted.current = true;
         fetchProducts();
+
+        return () => {
+            isMounted.current = false;
+        };
     }, [fetchProducts]);
 
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
@@ -68,7 +112,9 @@ const AllProductsPage = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-6">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary pb-2 mb-10">Market Product Listings</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary pb-2 mb-10">
+                Market Product Listings
+            </h2>
 
             {/* Filters & Search Section */}
             <div className="bg-base-200 rounded-xl p-6 shadow-sm border border-base-300 mb-8">
@@ -83,9 +129,7 @@ const AllProductsPage = () => {
                                 type="date"
                                 className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                 value={filters.startDate}
-                                onChange={(e) =>
-                                    setFilters((f) => ({ ...f, startDate: e.target.value }))
-                                }
+                                onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
                             />
                         </div>
                     </div>
@@ -99,9 +143,7 @@ const AllProductsPage = () => {
                                 type="date"
                                 className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                 value={filters.endDate}
-                                onChange={(e) =>
-                                    setFilters((f) => ({ ...f, endDate: e.target.value }))
-                                }
+                                onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
                             />
                         </div>
                     </div>
@@ -116,9 +158,7 @@ const AllProductsPage = () => {
                                 placeholder="Search by product or market"
                                 className="input input-sm input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                 value={filters.searchQuery}
-                                onChange={(e) =>
-                                    setFilters((f) => ({ ...f, searchQuery: e.target.value }))
-                                }
+                                onChange={(e) => setFilters((f) => ({ ...f, searchQuery: e.target.value }))}
                             />
                         </div>
                     </div>
@@ -139,7 +179,7 @@ const AllProductsPage = () => {
                                         backgroundImage: `url("data:image/svg+xml;utf8,<svg fill='%23222222' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path d='M6 8l4 4 4-4H6z'/></svg>")`,
                                         backgroundRepeat: "no-repeat",
                                         backgroundPosition: "right 0.75rem center",
-                                        backgroundSize: "1rem"
+                                        backgroundSize: "1rem",
                                     }}
                                 >
                                     <option value="createdAt_desc">Newest</option>
@@ -149,23 +189,18 @@ const AllProductsPage = () => {
                             </div>
                         </div>
 
-
-                        <button
-                            onClick={clearFilters}
-                            className="btn btn-secondary btn-sm w-full mt-auto focus:outline-none focus:ring-0"
-                        >
+                        <button onClick={clearFilters} className="btn btn-secondary btn-sm w-full mt-auto focus:outline-none focus:ring-0">
                             Clear Filters
                         </button>
                     </div>
                 </div>
             </div>
 
-
-
-
             {/* Product Grid */}
             {loading ? (
-                <Loading></Loading>
+                <Loading />
+            ) : error ? (
+                <div className="text-center text-red-500">{error}</div>
             ) : !products.length ? (
                 <NoFound
                     type="product"
@@ -175,81 +210,71 @@ const AllProductsPage = () => {
             ) : (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {products.map((prod) => (
-                            <motion.div
-                                key={prod._id}
-                                className="card bg-base-100 shadow-md hover:shadow-lg transition-all h-full flex flex-col border border-base-300"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                whileHover={{ scale: 1.01 }}
-                                layout
-                            >
-                                {/* Image */}
-                                <figure className="h-48 w-full overflow-hidden rounded-t-lg">
-                                    <img
-                                        src={prod.imageUrl}
-                                        alt={prod.itemName}
-                                        className="object-cover w-full h-full"
-                                    />
-                                </figure>
+                        <AnimatePresence>
+                            {products.map((prod) => (
+                                <motion.div
+                                    key={prod._id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    whileHover={{ scale: 1.01 }}
+                                    layout
+                                    layoutId={prod._id}
+                                >
+                                    {/* Image */}
+                                    <figure className="h-48 w-full overflow-hidden rounded-t-lg">
+                                        <img src={prod.imageUrl} alt={prod.itemName} className="object-cover w-full h-full" />
+                                    </figure>
 
-                                {/* Body */}
-                                <div className="card-body p-4 flex flex-col justify-between flex-1">
-                                    <div className="space-y-1">
-                                        <h3 className="text-xl font-semibold text-neutral pb-2">{prod.itemName}</h3>
+                                    {/* Body */}
+                                    <div className="card-body p-4 flex flex-col justify-between flex-1">
+                                        <div className="space-y-1">
+                                            <h3 className="text-xl font-semibold text-neutral pb-2">{prod.itemName}</h3>
 
+                                            <div className="grid grid-cols-2 items-center gap-2">
+                                                <div className="flex items-center gap-2 text-neutral font-medium">
+                                                    <FaMoneyBillWave className="text-accent" />
+                                                    ৳ {prod.pricePerUnit}
+                                                </div>
 
-                                        <div className="grid grid-cols-2 items-center gap-2">
-                                            <div className="flex items-center gap-2  text-neutral font-medium">
-                                                <FaMoneyBillWave className="text-accent" />
-                                                ৳ {prod.pricePerUnit}
-                                            </div>
+                                                <div className="flex items-center gap-2 text-neutral/70">
+                                                    <FaCalendarAlt className="text-accent" />
+                                                    {new Date(prod.date).toLocaleDateString()}
+                                                </div>
 
-                                            <div className="flex items-center gap-2  text-neutral/70">
-                                                <FaCalendarAlt className="text-accent" />
-                                                {new Date(prod.date).toLocaleDateString()}
-                                            </div>
+                                                <div className="flex items-center gap-2 text-neutral/70">
+                                                    <FaMapMarkerAlt className="text-accent" />
+                                                    {prod.marketName}
+                                                </div>
 
-
-
-                                            <div className="flex items-center gap-2  text-neutral/70">
-                                                <FaMapMarkerAlt className="text-accent" />
-                                                {prod.marketName}
-                                            </div>
-
-                                            <div className="flex items-center gap-2  text-neutral/70">
-                                                <FaUserTag className="text-accent" />
-                                                {prod.vendorName}
+                                                <div className="flex items-center gap-2 text-neutral/70">
+                                                    <FaUserTag className="text-accent" />
+                                                    {prod.vendorName}
+                                                </div>
                                             </div>
                                         </div>
 
+                                        {/* Button */}
+                                        <button onClick={() => navigate(`/products/${prod._id}`)} className="btn btn-sm btn-secondary mt-4">
+                                            View Details
+                                        </button>
                                     </div>
-
-                                    {/* Button */}
-                                    <button
-                                        onClick={() => navigate(`/products/${prod._id}`)}
-                                        className="btn btn-sm btn-secondary mt-4"
-                                    >
-                                        View Details
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
                     </div>
 
                     {/* Pagination */}
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center mt-8 gap-2">
-                            <button
-                                onClick={() => setPage(p => Math.max(p - 1, 1))}
-                                disabled={page === 1}
-                                className="btn btn-sm btn-outline"
-                            >
+                            <button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1} className="btn btn-sm btn-outline">
                                 Prev
                             </button>
-                            <span className="btn btn-sm">{page} / {totalPages}</span>
+                            <span className="btn btn-sm">
+                                {page} / {totalPages}
+                            </span>
                             <button
-                                onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                                 disabled={page === totalPages}
                                 className="btn btn-sm btn-outline"
                             >
