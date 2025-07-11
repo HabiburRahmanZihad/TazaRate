@@ -64,7 +64,7 @@ const ManageWatchlist = () => {
                 transition={{ duration: 0.5 }}
                 className="text-4xl font-bold text-center text-secondary mb-10"
             >
-                Your Watchlist
+                Watchlist
             </motion.h1>
 
             {watchlist.length === 0 ? (
@@ -117,7 +117,7 @@ const ManageWatchlist = () => {
                                         <td className="px-5 py-3">
                                             {new Date(product.date).toLocaleDateString()}
                                         </td>
-                                        <td className="px-5 py-3 text-right space-x-2">
+                                        <td className="px-5 py-3 text-right  grid grid-cols-1 sm:grid-cols-2 gap-2">
                                             <Link to="/products" className="btn btn-sm btn-outline">
                                                 <FaPlus className="mr-1" />
                                                 Add More

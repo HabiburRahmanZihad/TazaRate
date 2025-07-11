@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaBoxOpen, FaInfoCircle } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 
@@ -7,8 +9,12 @@ const MyOrdersPage = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: orders = [], isLoading, error } = useQuery({
-        queryKey: ['myOrders', user?.email],
+    const {
+        data: orders = [],
+        isLoading,
+        error,
+    } = useQuery({
+        queryKey: ["myOrders", user?.email],
         enabled: !!user?.email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/payments?email=${user.email}`);
@@ -16,46 +22,97 @@ const MyOrdersPage = () => {
         },
     });
 
-    if (isLoading) return <p className="text-center mt-10">Loading orders...</p>;
-    if (error) return <p className="text-center mt-10 text-red-500">Failed to load orders</p>;
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <p className="text-gray-400 text-lg animate-pulse">Fetching your orders...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center mt-10 text-red-500 font-medium">
+                Failed to load your orders. Please try again.
+            </div>
+        );
+    }
 
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">🛒 My Orders</h2>
+        <div className="max-w-6xl mx-auto px-6 py-12">
+            <motion.h2
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl font-bold text-secondary text-center mb-10 flex items-center justify-center gap-2"
+            >
+                <FaBoxOpen className="text-secondary" />
+                My Orders
+            </motion.h2>
 
             {orders.length === 0 ? (
-                <p>No orders found.</p>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className="text-center text-gray-500 space-y-4"
+                >
+                    <img
+                        src="/images/empty-orders.svg"
+                        alt="No Orders"
+                        className="mx-auto w-64"
+                    />
+                    <p className="text-lg">You haven't placed any orders yet.</p>
+                    <Link
+                        to="/products"
+                        className="btn btn-primary inline-flex items-center gap-2"
+                    >
+                        <FaBoxOpen />
+                        Start Shopping
+                    </Link>
+                </motion.div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-200">
-                        <thead>
-                            <tr className="bg-gray-100 text-left">
-                                <th className="p-3 border">Product Name</th>
-                                <th className="p-3 border">Market Name</th>
-                                <th className="p-3 border">Price (৳)</th>
-                                <th className="p-3 border">Date</th>
-                                <th className="p-3 border">Actions</th>
+                <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
+                    <table className="min-w-full text-sm text-left">
+                        <thead className="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th className="px-5 py-3">Product Name</th>
+                                <th className="px-5 py-3">Market</th>
+                                <th className="px-5 py-3">Price (৳)</th>
+                                <th className="px-5 py-3">Order Date</th>
+                                <th className="px-5 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map(order => (
-                                <tr key={order._id} className="hover:bg-gray-50">
-                                    <td className="p-3 border">{order.productName}</td>
-                                    <td className="p-3 border">{order.marketName}</td>
-                                    <td className="p-3 border">{order.price}</td>
-                                    <td className="p-3 border">
-                                        {new Date(order.paidAt).toLocaleDateString()}
-                                    </td>
-                                    <td className="p-3 border">
-                                        <Link
-                                            to={`/products/${order.productId}`}
-                                            className="text-blue-600 hover:underline"
-                                        >
-                                            🔍 View Details
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
+                            <AnimatePresence>
+                                {orders.map((order, idx) => (
+                                    <motion.tr
+                                        key={order._id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        transition={{ delay: idx * 0.03 }}
+                                        className="border-b border-secondary/30 hover:bg-gray-50 transition-colors"
+                                    >
+                                        <td className="px-5 py-3 font-medium">{order.productName}</td>
+                                        <td className="px-5 py-3">{order.marketName}</td>
+                                        <td className="px-5 py-3 text-green-600 font-semibold">৳ {order.price}</td>
+                                        <td className="px-5 py-3">
+                                            {new Date(order.paidAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-5 py-3 text-right">
+                                            <Link
+                                                to={`/products/${order.productId}`}
+                                                className="btn btn-sm bg-secondary text-neutral inline-flex items-center gap-2"
+                                                aria-label={`View details of ${order.productName}`}
+                                            >
+                                                <FaInfoCircle />
+                                                View
+                                            </Link>
+                                        </td>
+                                    </motion.tr>
+                                ))}
+                            </AnimatePresence>
                         </tbody>
                     </table>
                 </div>
