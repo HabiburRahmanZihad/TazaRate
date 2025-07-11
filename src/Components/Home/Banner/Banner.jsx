@@ -58,22 +58,19 @@ const Banner = () => {
 
                         {/* Overlay with rounded corners */}
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                            <motion.div
-                                className="text-center text-white max-w-3xl"
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8 }}
+                            <div
+                                className="text-center text-white max-w-3xl "
                             >
-                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
                                     {s.title}
                                 </h1>
 
-                                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl mb-3 text-secondary">
+                                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl mb-5 text-secondary">
                                     {s.subtitle}
                                 </h2>
 
                                 <p className="text-sm sm:text-base md:text-lg mb-5">{s.description}</p>
-                            </motion.div>
+                            </div>
                         </div>
                     </div>
                 ))}

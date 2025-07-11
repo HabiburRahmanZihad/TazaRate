@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
             { path: 'my-ads', element: <VendorRoute><MyAdvertisements /></VendorRoute> },
 
             // 🛠 Admin
-            
+
             { path: 'all-users', element: <AdminRoute><AllUsers /></AdminRoute> },
             { path: 'all-products', element: <AdminRoute><AllProducts /></AdminRoute> },
             { path: 'all-ads', element: <AdminRoute><AllAdvertisementsAdmin /></AdminRoute> },

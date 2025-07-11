@@ -121,7 +121,7 @@ const AllProductsPage = () => {
                             <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
                                 value={filters.startDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
                             />
@@ -135,7 +135,7 @@ const AllProductsPage = () => {
                             <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
                                 value={filters.endDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
                             />
@@ -150,7 +150,7 @@ const AllProductsPage = () => {
                             <input
                                 type="text"
                                 placeholder="Search by product or market"
-                                className="input input-sm input-bordered w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
                                 value={filters.searchQuery}
                                 onChange={(e) => setFilters((f) => ({ ...f, searchQuery: e.target.value }))}
                             />
@@ -162,7 +162,7 @@ const AllProductsPage = () => {
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-neutral mb-1">Sort By</label>
                             <select
-                                className="select select-sm w-full"
+                                className="select select-sm w-full focus:outline-none border-secondary"
                                 value={`${filters.sortBy}_${filters.order}`}
                                 onChange={(e) => {
                                     const [sb, o] = e.target.value.split("_");
