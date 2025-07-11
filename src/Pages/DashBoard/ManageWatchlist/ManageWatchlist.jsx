@@ -1,99 +1,140 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import axios from "axios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { FaTrashAlt, FaPlus } from "react-icons/fa";
 
 const ManageWatchlist = () => {
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+
     const [watchlist, setWatchlist] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [removingId, setRemovingId] = useState(null); // ✅ for loading state
-    const axiosSecure = useAxiosSecure();
+    const [removingId, setRemovingId] = useState(null);
 
     useEffect(() => {
         if (!user?.email) return;
-
         axios.get(`${import.meta.env.VITE_API_URL}/watchlist/${user.email}`)
             .then(res => setWatchlist(res.data))
-            .catch(() => toast.error("Failed to load watchlist"))
+            .catch(() => Swal.fire("Error", "Failed to load watchlist", "error"))
             .finally(() => setLoading(false));
     }, [user]);
 
-    const handleRemove = (productId) => {
-        const confirm = window.confirm("Are you sure you want to remove this item from your watchlist?");
-        if (!confirm) return;
+    const handleRemove = async (productId) => {
+        const result = await Swal.fire({
+            title: "Remove this item?",
+            text: "Are you sure you want to remove it from your watchlist?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#e11d48",
+            confirmButtonText: "Yes, remove it!",
+        });
+        if (!result.isConfirmed) return;
 
-        setRemovingId(productId); // ✅ Show loading
-
-        axiosSecure.delete(`/watchlist`, {
-            data: { userEmail: user.email, productId }
-        })
-            .then(() => {
-                toast.success("Removed from watchlist");
-                setWatchlist(prev => prev.filter(p => p._id !== productId));
-            })
-            .catch(() => toast.error("Failed to remove item"))
-            .finally(() => setRemovingId(null)); // ✅ Reset loading
+        setRemovingId(productId);
+        try {
+            await axiosSecure.delete(`/watchlist`, { data: { userEmail: user.email, productId } });
+            setWatchlist(prev => prev.filter(p => p._id !== productId));
+            Swal.fire("Removed!", "Item removed from watchlist.", "success");
+        } catch {
+            Swal.fire("Error", "Failed to remove item.", "error");
+        } finally {
+            setRemovingId(null);
+        }
     };
 
-    if (loading) return <div className="text-center py-10">Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <div className="text-gray-400 text-lg animate-pulse">
+                    Loading your awesome watchlist...
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-10">
-            <h1 className="text-2xl font-bold mb-6">⭐ Your Watchlist</h1>
+        <div className="max-w-6xl mx-auto px-6 py-12">
+            <motion.h1
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl font-bold text-center text-secondary mb-10"
+            >
+                Your Watchlist
+            </motion.h1>
 
             {watchlist.length === 0 ? (
-                <div className="text-center text-gray-500">
-                    No items in your watchlist.
-                    <div className="mt-4">
-                        <Link to="/products" className="btn btn-primary">➕ Add Products</Link>
-                    </div>
+                <div className="text-center text-gray-500 space-y-4">
+                    <motion.img
+                        src="/images/empty-state.svg"
+                        alt="Empty"
+                        className="mx-auto w-64"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                    />
+                    <p className="text-lg">Your watchlist is empty.</p>
+                    <Link to="/products" className="btn btn-primary inline-flex items-center gap-2">
+                        <FaPlus /> Browse Products
+                    </Link>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="table w-full border">
-                        <thead>
-                            <tr className="bg-gray-100 text-sm">
-                                <th>🖼️</th>
-                                <th>Product</th>
-                                <th>Market</th>
-                                <th>Date</th>
-                                <th>Actions</th>
+                <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
+                    <table className="min-w-full text-sm text-left">
+                        <thead className="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th className="px-5 py-3">Image</th>
+                                <th className="px-5 py-3">Product</th>
+                                <th className="px-5 py-3">Market</th>
+                                <th className="px-5 py-3">Date</th>
+                                <th className="px-5 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {watchlist.map((product) => (
-                                <tr key={product._id}>
-                                    <td>
-                                        <img
-                                            src={product.imageUrl}
-                                            alt={product.itemName}
-                                            className="w-12 h-12 object-cover rounded"
-                                        />
-                                    </td>
-                                    <td>{product.itemName}</td>
-                                    <td>{product.marketName}</td>
-                                    <td>{new Date(product.date).toLocaleDateString()}</td>
-                                    <td className="flex gap-2">
-                                        <Link
-                                            to="/products"
-                                            className="btn btn-sm btn-outline"
-                                        >
-                                            ➕ Add More
-                                        </Link>
-                                        <button
-                                            className={`btn btn-sm btn-error ${removingId === product._id ? "opacity-50 cursor-not-allowed" : ""}`}
-                                            onClick={() => handleRemove(product._id)}
-                                            disabled={removingId === product._id}
-                                        >
-                                            {removingId === product._id ? "Removing..." : "❌ Remove"}
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            <AnimatePresence>
+                                {watchlist.map((product, idx) => (
+                                    <motion.tr
+                                        key={product._id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        transition={{ delay: idx * 0.03 }}
+                                        className="border-b border-secondary/50 hover:bg-gray-50 transition-colors"
+                                    >
+                                        <td className="px-5 py-3">
+                                            <img
+                                                src={product.imageUrl}
+                                                alt={product.itemName}
+                                                className="w-12 h-12 object-cover rounded-lg shadow"
+                                            />
+                                        </td>
+                                        <td className="px-5 py-3 font-medium">{product.itemName}</td>
+                                        <td className="px-5 py-3">{product.marketName}</td>
+                                        <td className="px-5 py-3">
+                                            {new Date(product.date).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-5 py-3 text-right space-x-2">
+                                            <Link to="/products" className="btn btn-sm btn-outline">
+                                                <FaPlus className="mr-1" />
+                                                Add More
+                                            </Link>
+                                            <button
+                                                onClick={() => handleRemove(product._id)}
+                                                disabled={removingId === product._id}
+                                                className={`btn btn-sm btn-error inline-flex items-center gap-1 ${removingId === product._id ? "opacity-50" : ""
+                                                    }`}
+                                            >
+                                                <FaTrashAlt />
+                                                {removingId === product._id ? "Removing..." : "Remove"}
+                                            </button>
+                                        </td>
+                                    </motion.tr>
+                                ))}
+                            </AnimatePresence>
                         </tbody>
                     </table>
                 </div>
