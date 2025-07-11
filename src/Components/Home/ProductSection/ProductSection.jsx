@@ -74,7 +74,7 @@ const ProductSection = () => {
                                 </ul>
                                 <button
                                     onClick={() => nav(user ? `/products/${p._id}` : '/signin')}
-                                    className="btn btn-primary btn-sm mt-auto w-full flex items-center justify-center gap-2"
+                                    className="btn btn-primary  mt-auto w-full flex items-center justify-center gap-2 text-xl"
                                 >
                                     <FaSearch /> View Details
                                 </button>

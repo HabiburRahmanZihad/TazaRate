@@ -18,7 +18,7 @@ const HowItWorks = () => (
     <section className="bg-base-200 py-16 rounded-xl">
         <div className="container mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-neutral mb-8">How It Works</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
                 {[
                     {
                         icon: <FaUsers />,
@@ -43,7 +43,7 @@ const HowItWorks = () => (
                 ].map((step, idx) => (
                     <motion.div
                         key={idx}
-                        className="bg-base-100 p-6 rounded-xl shadow-md text-center space-y-3"
+                        className="bg-base-100 p-6 rounded-xl shadow-md text-center space-y-3 transition-transform hover:scale-115 hover:shadow-lg cursor-pointer"
                         variants={cardVariants}
                         initial="hidden"
                         whileInView="visible"

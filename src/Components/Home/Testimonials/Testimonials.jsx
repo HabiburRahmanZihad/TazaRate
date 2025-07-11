@@ -93,10 +93,10 @@ const Testimonials = () => (
                         <img
                             src={t.image}
                             alt={`${t.name} profile`}
-                            className="w-16 h-16 rounded-full mb-4 object-cover"
+                            className="w-18 h-18 rounded-full border-2 border-secondary mb-4 object-cover p-1"
                         />
                         <p className="text-neutral italic mb-4">“{t.text}”</p>
-                        <h4 className="text-sm font-semibold text-accent">{t.name}</h4>
+                        <h4 className="text-sm font-semibold text-secondary">{t.name}</h4>
                         <p className="text-xs text-neutral/60">{t.role}</p>
                     </motion.div>
                 ))}
