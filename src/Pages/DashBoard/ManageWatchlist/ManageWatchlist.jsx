@@ -69,16 +69,8 @@ const ManageWatchlist = () => {
 
             {watchlist.length === 0 ? (
                 <div className="text-center text-gray-500 space-y-4">
-                    <motion.img
-                        src="/images/empty-state.svg"
-                        alt="Empty"
-                        className="mx-auto w-64"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                    />
                     <p className="text-lg">Your watchlist is empty.</p>
-                    <Link to="/products" className="btn btn-primary inline-flex items-center gap-2">
+                    <Link to="/products" className="btn btn-secondary inline-flex items-center gap-2">
                         <FaPlus /> Browse Products
                     </Link>
                 </div>

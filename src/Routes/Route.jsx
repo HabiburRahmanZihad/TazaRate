@@ -32,6 +32,7 @@ import Refund from '../Pages/Refund/Refund';
 import Help from '../Pages/Help/Help';
 import Error from '../Pages/Error/Error';
 import DashboardError from '../Pages/DashBoard/DashboardError/DashboardError';
+import AdminVendorRoute from './AdminVendorRoute';
 
 export const router = createBrowserRouter([
     {
@@ -73,11 +74,12 @@ export const router = createBrowserRouter([
 
             { path: 'add-product', element: <VendorRoute><AddProduct /></VendorRoute> },
             { path: 'my-products', element: <VendorRoute><MyProducts /></VendorRoute> },
-            { path: 'update-product/:id', element: <VendorRoute><UpdateProduct /></VendorRoute> },
+            { path: 'update-product/:id', element: <AdminVendorRoute><UpdateProduct /></AdminVendorRoute> },
             { path: 'add-ad', element: <VendorRoute><AddAdvertisement /></VendorRoute> },
             { path: 'my-ads', element: <VendorRoute><MyAdvertisements /></VendorRoute> },
 
             // 🛠 Admin
+            
             { path: 'all-users', element: <AdminRoute><AllUsers /></AdminRoute> },
             { path: 'all-products', element: <AdminRoute><AllProducts /></AdminRoute> },
             { path: 'all-ads', element: <AdminRoute><AllAdvertisementsAdmin /></AdminRoute> },
