@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router'; 
+import { Link } from 'react-router';
+import { motion } from 'framer-motion';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import {
+    FiBarChart, FiTool, FiShoppingCart, FiEdit,
+    FiFileText, FiClipboard, FiUsers, FiUser, FiMail, FiShield,
+    FiCalendar, FiClock
+} from 'react-icons/fi';
 
 const DashboardHome = () => {
-    const { user } = useAuth(); // Firebase user
+    const { user } = useAuth();
     const userEmail = user?.email;
     const axiosSecure = useAxiosSecure();
 
@@ -13,6 +19,8 @@ const DashboardHome = () => {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        if (!userEmail) return;
+
         const fetchUser = async () => {
             try {
                 const res = await axiosSecure.get(`/users/${userEmail}`);
@@ -25,7 +33,7 @@ const DashboardHome = () => {
             }
         };
 
-        if (userEmail) fetchUser();
+        fetchUser();
     }, [userEmail, axiosSecure]);
 
     const formatDate = (dateStr) =>
@@ -37,67 +45,118 @@ const DashboardHome = () => {
             minute: '2-digit',
         });
 
+    const commonIcons = {
+        PriceTrends: <FiBarChart size={24} />,
+        Watchlist: <FiTool size={24} />,
+        MyOrders: <FiShoppingCart size={24} />,
+        AddProduct: <FiEdit size={24} />,
+        MyProducts: <FiFileText size={24} />,
+        AddAd: <FiClipboard size={24} />,
+        MyAds: <FiClipboard size={24} />,
+        AllUsers: <FiUsers size={24} />,
+        AllProducts: <FiFileText size={24} />,
+        AllAds: <FiClipboard size={24} />,
+        AllOrders: <FiShoppingCart size={24} />,
+    };
+
     const roleCards = {
         user: [
-            { to: "/dashboard/price-trends", title: "Price Trends", icon: "📈" },
-            { to: "/dashboard/watchlist", title: "Manage Watchlist", icon: "🛠️" },
-            { to: "/dashboard/my-orders", title: "My Orders", icon: "🛒" },
+            { to: "/dashboard/price-trends", title: "Price Trends", icon: commonIcons.PriceTrends },
+            { to: "/dashboard/watchlist", title: "Watchlist", icon: commonIcons.Watchlist },
+            { to: "/dashboard/my-orders", title: "My Orders", icon: commonIcons.MyOrders },
         ],
         vendor: [
-            { to: "/dashboard/add-product", title: "Add Product", icon: "📝" },
-            { to: "/dashboard/my-products", title: "My Products", icon: "📄" },
-            { to: "/dashboard/add-ad", title: "Add Advertisement", icon: "📢" },
-            { to: "/dashboard/my-ads", title: "My Advertisements", icon: "📊" },
+            { to: "/dashboard/add-product", title: "Add Product", icon: commonIcons.AddProduct },
+            { to: "/dashboard/my-products", title: "My Products", icon: commonIcons.MyProducts },
+            { to: "/dashboard/add-ad", title: "Add Advertisement", icon: commonIcons.AddAd },
+            { to: "/dashboard/my-ads", title: "My Ads", icon: commonIcons.MyAds },
         ],
         admin: [
-            { to: "/dashboard/all-users", title: "All Users", icon: "👥" },
-            { to: "/dashboard/all-products", title: "All Products", icon: "📋" },
-            { to: "/dashboard/all-ads", title: "All Advertisements", icon: "📢" },
-            { to: "/dashboard/all-orders", title: "All Orders", icon: "🛒" },
+            { to: "/dashboard/all-users", title: "All Users", icon: commonIcons.AllUsers },
+            { to: "/dashboard/all-products", title: "All Products", icon: commonIcons.AllProducts },
+            { to: "/dashboard/all-ads", title: "All Ads", icon: commonIcons.AllAds },
+            { to: "/dashboard/all-orders", title: "All Orders", icon: commonIcons.AllOrders },
         ],
     };
 
-    // Loading and error states
-    if (loading) return <p className="p-4 text-gray-500">Loading dashboard...</p>;
-    if (error || !userData) return <p className="p-4 text-red-500">⚠️ Failed to load user data</p>;
+    if (loading) {
+        return <p className="p-6 text-gray-500 animate-pulse">Loading dashboard...</p>;
+    }
+
+    if (error || !userData) {
+        return (
+            <p className="p-6 text-red-600">
+                Something went wrong. Please refresh or try again later.
+            </p>
+        );
+    }
 
     const { name, email, role, profilePhoto, createdAt, lastLogin } = userData;
     const cards = roleCards[role] || [];
 
     return (
-        <div className="p-6 space-y-6">
-            {/* User Info Card */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 bg-white p-6 rounded-lg shadow border">
-                <img
-                    src={profilePhoto}
-                    alt={name}
-                    className="w-24 h-24 rounded-full object-cover border"
-                />
-                <div>
-                    <h2 className="text-2xl font-semibold">{name}</h2>
-                    <p className="text-gray-600">📧 {email}</p>
-                    <p className="text-gray-600">🔒 Role: {role}</p>
-                    <p className="text-gray-600">🕓 Joined: {formatDate(createdAt)}</p>
-                    <p className="text-gray-600">🔄 Last Login: {formatDate(lastLogin)}</p>
-                </div>
-            </div>
-
-            {/* Role-based Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cards.map((card, idx) => (
-                    <div key={idx} className="border rounded-lg shadow-md p-6 flex flex-col justify-between bg-white">
-                        <div>
-                            <div className="text-4xl mb-4">{card.icon}</div>
-                            <h2 className="text-xl font-semibold mb-4">{card.title}</h2>
-                        </div>
-                        <Link
-                            to={card.to}
-                            className="mt-auto inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-                        >
-                            Go to {card.title}
-                        </Link>
+        <div className="p-6 space-y-10 bg-base-100">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Profile Card */}
+                <motion.div
+                    className="bg-white/80 backdrop-blur-md rounded-2xl p-4 md:p-8 flex flex-col items-center gap-8 shadow-xl border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    <div className="relative">
+                        <img
+                            src={profilePhoto || '/default-avatar.png'}
+                            alt={name}
+                            className="w-48 h-48 md:w-[250px] md:h-[250px] rounded-full object-cover border-4 border-secondary p-1 shadow-lg"
+                            onError={(e) => (e.target.src = '/default-avatar.png')}
+                        />
+                        <span className="absolute bottom-0 right-0 bg-gradient-to-br from-secondary to-primary text-white text-[11px] px-3 py-1 rounded-full shadow-md font-semibold uppercase">
+                            {role}
+                        </span>
                     </div>
-                ))}
+
+                    <div className="space-y-3 text-center md:text-left">
+                        <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <FiUser className="text-primary" /> {name}
+                        </h2>
+                        <p className="text-gray-600 text-xs md:text-[16px] flex items-center gap-2"><FiMail /> {email}</p>
+                        <p className="text-gray-600 text-xs md:text-[16px] flex items-center gap-2"><FiShield /> Role: {role}</p>
+                        <p className="text-gray-500 text-xs md:text-[16px] flex items-center gap-2"><FiCalendar /> Joined: {formatDate(createdAt)}</p>
+                        <p className="text-gray-500 text-xs md:text-[16px] flex items-center gap-2"><FiClock /> Last Login: {formatDate(lastLogin)}</p>
+                    </div>
+                </motion.div>
+
+                {/* Action Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {cards.map((card, index) => (
+                        <motion.div
+                            key={index}
+                            className="group bg-white shadow-md hover:shadow-xl border border-gray-200 rounded-2xl p-6 hover:scale-[1.02] transition-all duration-300"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                        >
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="bg-gradient-to-br from-primary to-secondary text-white p-3 rounded-xl shadow">
+                                    {card.icon}
+                                </div>
+                                <span className="text-sm text-gray-400 font-semibold">#{index + 1}</span>
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-800">{card.title}</h3>
+                            <p className="text-sm text-gray-600 mb-3">
+                                Manage your {card.title.toLowerCase()}.
+                            </p>
+                            <Link
+                                to={card.to}
+                                className="text-sm text-secondary font-medium hover:underline focus:outline-none"
+                                aria-label={`Go to ${card.title}`}
+                            >
+                                Go to {card.title} →
+                            </Link>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </div>
     );

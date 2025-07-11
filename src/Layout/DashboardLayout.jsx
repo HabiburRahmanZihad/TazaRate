@@ -16,6 +16,7 @@ import {
 import useUserRole from '../hooks/useUserRole';
 import Navbar from '../Components/Shared/Navbar/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
+import ScrollToTop from '../hooks/ScrollToTop';
 
 const DashboardLayout = () => {
     const { role, roleLoading } = useUserRole();
@@ -111,6 +112,7 @@ const DashboardLayout = () => {
 
     return (
         <div className="min-h-screen flex flex-col">
+            <ScrollToTop />
             <Navbar />
 
             {/* Mobile Header */}

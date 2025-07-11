@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../Components/Shared/Footer/Footer';
 import Navbar from '../Components/Shared/Navbar/Navbar';
+import ScrollToTop from '../hooks/ScrollToTop';
 
 const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -24,6 +25,7 @@ const Root = () => {
 
     return (
         <div className="flex flex-col min-h-screen bg-base-100">
+            <ScrollToTop />
             <Navbar />
 
             <AnimatePresence mode="wait">
