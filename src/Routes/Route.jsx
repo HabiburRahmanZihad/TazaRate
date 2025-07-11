@@ -25,12 +25,12 @@ import AllOrdersPage from '../Pages/DashBoard/AllOrdersPage/AllOrdersPage';
 import AccessDenied from '../Pages/AccessDenied/AccessDenied';
 import AdminRoute from './AdminRoute';
 import VendorRoute from './VendorRoute';
-import AboutUs from '../Pages/FooterComponent/AboutUs';
-import Contact from '../Pages/FooterComponent/Contact';
-import Terms from '../Pages/FooterComponent/Terms';
-import Privacy from '../Pages/FooterComponent/Privacy';
-import Refund from '../Pages/FooterComponent/Refund';
-import Help from '../Pages/FooterComponent/Help';
+import AboutUs from '../Pages/AboutUS/AboutUs';
+import Contact from '../Pages/Contact/Contact';
+import Terms from '../Pages/Terms/Terms';
+import Privacy from '../Pages/Privacy/Privacy';
+import Refund from '../Pages/Refund/Refund';
+import Help from '../Pages/Help/Help';
 
 export const router = createBrowserRouter([
     {
