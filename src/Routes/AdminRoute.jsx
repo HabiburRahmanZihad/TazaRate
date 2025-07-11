@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
-import Loading from '../Pages/Loading/Loading';
+import Loading from '../Components/Loader/Loading';
 
 
 const AdminRoute = ({ children }) => {

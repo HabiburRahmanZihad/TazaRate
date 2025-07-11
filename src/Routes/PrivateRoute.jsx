@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router';
-import Loading from '../Pages/Loading/Loading';
+import Loading from '../Components/Loader/Loading';
 import useAuth from '../hooks/useAuth';
 
 
