@@ -1,100 +1,143 @@
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
+import { MdCampaign, MdCheckCircle, MdCancel } from 'react-icons/md';
 
 const AllAdvertisementsAdmin = () => {
     const axiosSecure = useAxiosSecure();
+    const queryClient = useQueryClient();
 
-    const { data: ads = [], refetch } = useQuery({
-        queryKey: ["admin-ads"],
+    const { data: ads = [], isLoading } = useQuery({
+        queryKey: ['admin-ads'],
         queryFn: async () => {
-            const res = await axiosSecure.get("/advertisements");
+            const res = await axiosSecure.get('/advertisements');
             return res.data;
         },
     });
 
-    const updateStatus = async (id, status) => {
-        try {
-            await axiosSecure.patch(`/advertisements/${id}/status`, {
-                status,
-                feedback: "", // No feedback needed
-            });
-            toast.success(`Ad ${status}`);
-            refetch();
-        } catch {
-            toast.error("Failed to update status");
+    const updateStatusMutation = useMutation({
+        mutationFn: async ({ adId, status, feedback = '' }) => {
+            const res = await axiosSecure.patch(`/advertisements/${adId}/status`, { status, feedback });
+            return res.data;
+        },
+        onSuccess: () => {
+            toast.success('Advertisement updated');
+            queryClient.invalidateQueries(['admin-ads']);
+        },
+        onError: () => toast.error('Failed to update advertisement'),
+    });
+
+    const confirmApprove = async (id) => {
+        const result = await Swal.fire({
+            title: 'Approve this advertisement?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4ade80',
+            confirmButtonText: 'Approve',
+        });
+        if (result.isConfirmed) {
+            updateStatusMutation.mutate({ adId: id, status: 'accepted' });
+        }
+    };
+
+    const confirmReject = async (id) => {
+        const { value, isConfirmed } = await Swal.fire({
+            title: 'Reject this advertisement',
+            input: 'textarea',
+            inputLabel: 'Rejection reason',
+            inputPlaceholder: 'Type your feedback...',
+            inputValidator: (val) => (!val ? 'Feedback is required' : null),
+            showCancelButton: true,
+            confirmButtonColor: '#f87171',
+            confirmButtonText: 'Reject',
+        });
+
+        if (isConfirmed) {
+            updateStatusMutation.mutate({ adId: id, status: 'rejected', feedback: value });
         }
     };
 
     return (
-        <div className="p-4">
-            <h2 className="text-2xl font-semibold mb-4">📢 All Advertisements</h2>
-            <div className="overflow-x-auto">
-                <table className="table w-full border border-gray-200">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th>#</th>
-                            <th>Image</th>
-                            <th>Title</th>
-                            <th>Vendor</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ads.map((ad, i) => (
-                            <tr key={ad._id}>
-                                <td>{i + 1}</td>
-                                <td>
-                                    <img src={ad.imageUrl} alt="ad" className="w-20 rounded" />
-                                </td>
-                                <td>
-                                    <p className="font-medium">{ad.adTitle}</p>
-                                    <p className="text-sm text-gray-500">{ad.shortDescription}</p>
-                                </td>
-                                <td>
-                                    <p>{ad.vendorName}</p>
-                                    <p className="text-xs text-gray-500">{ad.vendorEmail}</p>
-                                </td>
-                                <td>
-                                    <span
-                                        className={`capitalize px-2 py-1 rounded text-white ${ad.status === "accepted"
-                                            ? "bg-green-500"
-                                            : ad.status === "rejected"
-                                                ? "bg-red-500"
-                                                : "bg-yellow-500"
-                                            }`}
-                                    >
-                                        {ad.status}
-                                    </span>
-                                    {ad.rejectionFeedback && (
-                                        <p className="text-xs text-red-500 mt-1 italic">
-                                            {ad.rejectionFeedback}
-                                        </p>
-                                    )}
-                                </td>
-                                <td className="space-x-1">
-                                    {ad.status === "pending" && (
-                                        <>
-                                            <button
-                                                onClick={() => updateStatus(ad._id, "accepted")}
-                                                className="btn btn-xs btn-success"
-                                            >
-                                                Approve
-                                            </button>
-                                            <button
-                                                onClick={() => updateStatus(ad._id, "rejected")}
-                                                className="btn btn-xs btn-error"
-                                            >
-                                                Reject
-                                            </button>
-                                        </>
-                                    )}
-                                </td>
+        <div className="max-w-7xl mx-auto px-4 py-8">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-8">
+                <MdCampaign className="text-4xl text-secondary" />
+                <h2 className="text-3xl font-bold text-secondary">All Advertisements</h2>
+            </div>
+
+            {/* Table */}
+            <div className="bg-white shadow-xl rounded-xl overflow-x-auto border border-gray-200">
+                {isLoading ? (
+                    <div className="text-center py-10 text-gray-500">Loading advertisements...</div>
+                ) : ads.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500">
+                        <p className="text-lg font-medium">😕 No advertisements found.</p>
+                        <p className="text-sm">Please check back later.</p>
+                    </div>
+                ) : (
+                    <table className="w-full text-sm">
+                        <thead className="bg-secondary text-white text-left">
+                            <tr>
+                                <th className="py-3 px-4">#</th>
+                                <th className="py-3 px-4">Image</th>
+                                <th className="py-3 px-4">Title</th>
+                                <th className="py-3 px-4">Vendor</th>
+                                <th className="py-3 px-4">Status</th>
+                                <th className="py-3 px-4">Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {ads.map((ad, idx) => (
+                                <tr key={ad._id} className=" border-t border-secondary hover:bg-gray-50 transition duration-150">
+                                    <td className="px-4 py-3">{idx + 1}</td>
+                                    <td className="px-4 py-3">
+                                        <img src={ad.imageUrl} alt={ad.adTitle} className="w-16 h-16 object-cover rounded-md border" />
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <p className="font-medium text-neutral">{ad.adTitle}</p>
+                                        <p className="text-xs text-gray-500">{ad.shortDescription}</p>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <p>{ad.vendorName}</p>
+                                        <p className="text-xs text-gray-500">{ad.vendorEmail}</p>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <span
+                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold text-white capitalize ${ad.status === 'accepted'
+                                                    ? 'bg-emerald-500'
+                                                    : ad.status === 'rejected'
+                                                        ? 'bg-rose-500'
+                                                        : 'bg-yellow-500'
+                                                }`}
+                                            title={ad.status === 'rejected' && ad.rejectionFeedback ? ad.rejectionFeedback : ''}
+                                        >
+                                            {ad.status}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        {ad.status === 'pending' && (
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => confirmApprove(ad._id)}
+                                                    className="flex items-center gap-1 px-3 py-1 text-white bg-emerald-600 hover:bg-emerald-700 rounded text-xs"
+                                                >
+                                                    <MdCheckCircle className="text-sm" /> Approve
+                                                </button>
+                                                <button
+                                                    onClick={() => confirmReject(ad._id)}
+                                                    className="flex items-center gap-1 px-3 py-1 text-white bg-rose-600 hover:bg-rose-700 rounded text-xs"
+                                                >
+                                                    <MdCancel className="text-sm" /> Reject
+                                                </button>
+                                            </div>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );
