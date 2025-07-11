@@ -1,123 +1,133 @@
 import { Link } from 'react-router';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import {
+    FaFacebook, FaTwitter, FaLinkedin, FaYoutube,
+    FaPhone, FaEnvelope, FaMapMarkerAlt
+} from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import logo from '../../../assets/AllPic/Logo_noBgColor.png';
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white">
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {/* Logo and Company Info */}
+        <motion.footer
+            className="bg-gray-900 text-white"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+            <div className="container mx-auto px-4 py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+                    {/* Logo & Info */}
                     <div>
-                        <div className="flex items-center space-x-2 mb-4">
-                            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">T</span>
-                            </div>
-                            <div>
-                                <span className="text-xl font-bold">TazaRate</span>
-                                <p className="text-xs text-green-300">"Track Fresh, Shop Fresh"</p>
-                            </div>
-                        </div>
-                        <p className="text-gray-300 mb-4">
-                            Your trusted platform for tracking fresh market prices and making informed shopping decisions.
+                        <img src={logo} alt="TazaRate Logo" className="w-32 mb-2" />
+                        <p className="text-green-300 text-sm font-medium">“Track Fresh, Shop Fresh”</p>
+                        <p className="text-gray-400 text-sm mt-2">
+                            Your trusted platform for real-time fresh market prices across local bazaars.
                         </p>
-                        <div className="flex space-x-4">
-                            <a href="#" className="text-gray-300 hover:text-green-400 transition-colors">
+                        <div className="flex space-x-4 mt-4">
+                            <Link
+                                to="https://www.facebook.com/habiburrahmanzihad.zihad"
+                                target="_blank"
+                                className="text-gray-400 hover:text-green-400 transition transform hover:scale-110"
+                            >
                                 <FaFacebook size={20} />
-                            </a>
-                            <a href="#" className="text-gray-300 hover:text-green-400 transition-colors">
+                            </Link>
+                            <Link
+                                to="https://x.com/xihad_xihad"
+                                target="_blank"
+                                className="text-gray-400 hover:text-green-400 transition transform hover:scale-110"
+                            >
                                 <FaTwitter size={20} />
-                            </a>
-                            <a href="#" className="text-gray-300 hover:text-green-400 transition-colors">
-                                <FaInstagram size={20} />
-                            </a>
-                            <a href="#" className="text-gray-300 hover:text-green-400 transition-colors">
+                            </Link>
+                            <Link
+                                to="https://www.youtube.com/@xihadxone"
+                                target="_blank"
+                                className="text-gray-400 hover:text-green-400 transition transform hover:scale-110"
+                            >
+                                <FaYoutube size={20} />
+                            </Link>
+                            <Link
+                                to="https://linkedin.com/in/habiburrahmanzihad"
+                                target="_blank"
+                                className="text-gray-400 hover:text-green-400 transition transform hover:scale-110"
+                            >
                                 <FaLinkedin size={20} />
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
                     {/* Quick Links */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link to="/" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/all-products" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    All Products
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/about" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    About Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/contact" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Contact
-                                </Link>
-                            </li>
+                        <h3 className="text-lg font-semibold mb-4 text-green-400">Quick Links</h3>
+                        <ul className="space-y-2 text-sm">
+                            {[
+                                { to: '/', label: 'Home' },
+                                { to: '/products', label: 'All Products' },
+                                { to: '/aboutUs', label: 'About Us' },
+                                { to: '/contact', label: 'Contact' },
+                            ].map((link, i) => (
+                                <li key={i}>
+                                    <Link
+                                        to={link.to}
+                                        className="text-gray-300 hover:text-green-400 transition duration-200 border-b border-transparent hover:border-green-400 pb-1 inline-block"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     {/* Legal */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Legal</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link to="/terms" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Terms & Conditions
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/privacy" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Privacy Policy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/refund" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Refund Policy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/help" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Help Center
-                                </Link>
-                            </li>
+                        <h3 className="text-lg font-semibold mb-4 text-green-400">Legal</h3>
+                        <ul className="space-y-2 text-sm">
+                            {[
+                                { to: '/terms', label: 'Terms & Conditions' },
+                                { to: '/privacy', label: 'Privacy Policy' },
+                                { to: '/refund', label: 'Refund Policy' },
+                                { to: '/help', label: 'Help Center' },
+                            ].map((link, i) => (
+                                <li key={i}>
+                                    <Link
+                                        to={link.to}
+                                        className="text-gray-300 hover:text-green-400 transition duration-200 border-b border-transparent hover:border-green-400 pb-1 inline-block"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     {/* Contact Info */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center space-x-3">
-                                <FaMapMarkerAlt className="text-green-400" />
-                                <span className="text-gray-300">Dhaka, Bangladesh</span>
+                        <h3 className="text-lg font-semibold mb-4 text-green-400">Contact Info</h3>
+                        <div className="space-y-3 text-sm text-gray-300">
+                            <div className="flex items-start gap-3">
+                                <FaMapMarkerAlt className="text-green-400 mt-1" />
+                                <span>Dhaka, Bangladesh</span>
                             </div>
-                            <div className="flex items-center space-x-3">
-                                <FaPhone className="text-green-400" />
-                                <span className="text-gray-300">+880-123-456-789</span>
+                            <div className="flex items-start gap-3">
+                                <FaPhone className="text-green-400 mt-1" />
+                                <span>+880-123-456-789</span>
                             </div>
-                            <div className="flex items-center space-x-3">
-                                <FaEnvelope className="text-green-400" />
-                                <span className="text-gray-300">info@tazarate.com</span>
+                            <div className="flex items-start gap-3">
+                                <FaEnvelope className="text-green-400 mt-1" />
+                                <span>info@tazarate.com</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-                    <p className="text-gray-300">
-                        © {new Date().getFullYear()} TazaRate. All rights reserved. Developed with ❤️ for fresh market tracking.
-                    </p>
+                <div className="border-t border-gray-700 mt-12 pt-6 text-center text-sm text-gray-400">
+                    © {new Date().getFullYear()} <span className="text-green-400 font-semibold">TazaRate</span>. All rights reserved.
+                    <br />
+                    Built with ❤️ for your local bazaar.
                 </div>
             </div>
-        </footer>
+        </motion.footer>
     );
 };
 
