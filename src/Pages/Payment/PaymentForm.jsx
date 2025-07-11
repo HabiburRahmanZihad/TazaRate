@@ -1,10 +1,29 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import {  useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-
 import useAuth from "../../hooks/useAuth";
+import { FaCreditCard, FaUser, FaStore } from "react-icons/fa";
+
+const CARD_OPTIONS = {
+    style: {
+        base: {
+            iconColor: "#6B7280",
+            color: "#1F2937",
+            fontWeight: "500",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "16px",
+            "::placeholder": {
+                color: "#9CA3AF",
+            },
+        },
+        invalid: {
+            iconColor: "#EF4444",
+            color: "#EF4444",
+        },
+    },
+};
 
 const PaymentForm = ({ product }) => {
     const stripe = useStripe();
@@ -14,6 +33,8 @@ const PaymentForm = ({ product }) => {
     const navigate = useNavigate();
 
     const [error, setError] = useState(null);
+    const [processing, setProcessing] = useState(false);
+
     const price = product?.prices?.at(-1)?.price || 0;
 
     const handleSubmit = async (e) => {
@@ -25,6 +46,7 @@ const PaymentForm = ({ product }) => {
         if (!card) return;
 
         try {
+            setProcessing(true);
             const res = await axiosSecure.post("/create-payment-intent", {
                 productId: product._id,
                 userEmail: user?.email,
@@ -33,6 +55,7 @@ const PaymentForm = ({ product }) => {
             const clientSecret = res.data.clientSecret;
             if (!clientSecret) {
                 setError({ message: "No client secret received" });
+                setProcessing(false);
                 return;
             }
 
@@ -64,36 +87,58 @@ const PaymentForm = ({ product }) => {
 
                 await axiosSecure.post("/payments", paymentData);
 
-                Swal.fire("Payment Success", `You paid ৳${price}`, "success").then(() => {
-                    navigate("/dashboard/my-orders"); // or any route you want
+                Swal.fire("Payment Successful", `You paid ৳${price}`, "success").then(() => {
+                    navigate("/dashboard/my-orders");
                 });
             }
         } catch (err) {
             console.error(err);
             setError({ message: "Payment failed. Try again." });
+        } finally {
+            setProcessing(false);
         }
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow rounded">
-            <h2 className="text-2xl font-semibold mb-4">💳 Pay for: {product.itemName}</h2>
-            <p className="mb-2">Price: <strong>৳{price}</strong></p>
-            <p className="mb-4 text-sm text-gray-500">From: {user?.name || user?.email}</p>
-            <p className="mb-4 text-sm text-gray-500">To: {product.vendorName} ({product.vendorEmail})</p>
+        <div className="max-w-lg mx-auto bg-base-100 border border-base-300 shadow-md rounded-xl p-6 space-y-5">
+            <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+                <FaCreditCard /> Complete Payment
+            </h2>
+
+            <div className="space-y-2">
+                <p className="text-neutral">Amount: <strong className="text-secondary">৳{price}</strong></p>
+                <p className="flex items-center gap-2 text-neutral/70 text-sm">
+                    <FaUser className="text-accent" />
+                    From: {user?.name || user?.email}
+                </p>
+                <p className="flex items-center gap-2 text-neutral/70 text-sm">
+                    <FaStore className="text-accent" />
+                    To: {product.vendorName} ({product.vendorEmail})
+                </p>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="border p-3 rounded-md">
-                    <CardElement />
+                <div className="border border-base-300 p-4 rounded-md bg-white shadow-sm">
+                    <CardElement options={CARD_OPTIONS} />
                 </div>
-                {error && <p className="text-red-600 text-sm">{error.message}</p>}
+
+                {error && (
+                    <p className="text-red-500 text-sm font-medium">{error.message}</p>
+                )}
+
                 <button
                     type="submit"
-                    disabled={!stripe}
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                    disabled={!stripe || processing}
+                    className={`btn btn-primary w-full ${processing ? "btn-disabled" : ""}`}
                 >
-                    Pay ৳{price}
+                    {processing ? "Processing..." : `Pay ৳${price}`}
                 </button>
             </form>
+            {/* back to previous page */}
+            <Link to="/products" className="btn text-secondary w-full hover:bg-base-100">
+                &larr; Back to Products
+            </Link>
+
         </div>
     );
 };
