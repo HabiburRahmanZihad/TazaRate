@@ -1,16 +1,15 @@
-import {  useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 import useAuth from "../../../hooks/useAuth";
+import { MdEdit, MdDelete, MdLibraryBooks } from "react-icons/md";
 
 const MyAdvertisements = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [ads, setAds] = useState([]);
-
-    // New state to track deletion in progress
     const [deletingAdId, setDeletingAdId] = useState(null);
 
     const fetchAds = useCallback(async () => {
@@ -41,12 +40,10 @@ const MyAdvertisements = () => {
 
         try {
             setDeletingAdId(id);
-
             const res = await axiosSecure.delete(`/advertisements/${id}`);
-            console.log("Delete response:", res.data);
 
             if (res.data.success) {
-                setAds(prevAds => prevAds.filter(ad => ad._id !== id));
+                setAds(prev => prev.filter(ad => ad._id !== id));
                 toast.success("Advertisement deleted");
             } else {
                 toast.error("Advertisement was not deleted");
@@ -59,23 +56,21 @@ const MyAdvertisements = () => {
         }
     };
 
-
-
     const openEditDialog = (ad) => {
         Swal.fire({
-            title: 'Edit Advertisement',
+            title: "Edit Advertisement",
             html: `
                 <input id="swal-input1" class="swal2-input" placeholder="Title" value="${ad.adTitle}" />
                 <textarea id="swal-input2" class="swal2-textarea" placeholder="Short Description">${ad.shortDescription}</textarea>
             `,
             focusConfirm: false,
             showCancelButton: true,
-            confirmButtonText: 'Update',
+            confirmButtonText: "Update",
             preConfirm: () => {
-                const title = document.getElementById('swal-input1').value.trim();
-                const desc = document.getElementById('swal-input2').value.trim();
+                const title = document.getElementById("swal-input1").value.trim();
+                const desc = document.getElementById("swal-input2").value.trim();
                 if (!title || !desc) {
-                    Swal.showValidationMessage('Both fields are required');
+                    Swal.showValidationMessage("Both fields are required");
                     return;
                 }
                 return { adTitle: title, shortDescription: desc };
@@ -105,49 +100,54 @@ const MyAdvertisements = () => {
     };
 
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4 text-primary">📃 My Advertisements</h2>
+        <div className="p-6 max-w-5xl mx-auto">
+            <div className="flex items-center justify-center gap-2 mb-6">
+                <MdLibraryBooks className="text-3xl text-secondary" />
+                <h2 className="text-2xl font-bold  text-secondary">My Advertisements</h2>
+            </div>
 
-            <div className="overflow-x-auto">
-                <table className="table w-full border">
-                    <thead>
-                        <tr className="bg-gray-100 text-left">
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+            <div className="overflow-x-auto bg-white rounded-xl shadow-md">
+                <table className="table w-full text-sm">
+                    <thead className="bg-secondary text-white">
+                        <tr>
+                            <th className="py-3 px-4 text-left">Title</th>
+                            <th className="py-3 px-4 text-left">Description</th>
+                            <th className="py-3 px-4 text-left">Status</th>
+                            <th className="py-3 px-4 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {ads.map((ad) => (
-                            <tr key={ad._id} className="border-t">
-                                <td>{ad.adTitle}</td>
-                                <td>{ad.shortDescription}</td>
-                                <td>
+                            <tr key={ad._id} className="border-t hover:bg-gray-50">
+                                <td className="py-3 px-4">{ad.adTitle}</td>
+                                <td className="py-3 px-4">{ad.shortDescription}</td>
+                                <td className="py-3 px-4">
                                     <span
-                                        className={`badge ${ad.status === "pending"
-                                            ? "badge-warning"
+                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${ad.status === "pending"
+                                            ? "bg-yellow-100 text-yellow-800"
                                             : ad.status === "accepted"
-                                                ? "badge-success"
-                                                : "badge-error"
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-red-100 text-red-800"
                                             }`}
                                     >
                                         {ad.status}
                                     </span>
                                 </td>
-                                <td className="space-x-2">
+                                <td className="py-3 px-4 flex gap-2">
                                     <button
                                         onClick={() => openEditDialog(ad)}
-                                        className="btn btn-sm btn-primary"
+                                        className="flex items-center gap-1 text-white bg-secondary hover:bg-secondary/90 px-3 py-1 rounded text-sm"
                                         disabled={deletingAdId === ad._id}
                                     >
+                                        <MdEdit className="text-base" />
                                         Edit
                                     </button>
                                     <button
                                         onClick={() => onDeleteAd(ad._id)}
-                                        className="btn btn-sm btn-error"
+                                        className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                                         disabled={deletingAdId === ad._id}
                                     >
+                                        <MdDelete className="text-base" />
                                         {deletingAdId === ad._id ? "Deleting..." : "Delete"}
                                     </button>
                                 </td>
@@ -155,7 +155,7 @@ const MyAdvertisements = () => {
                         ))}
                         {ads.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="text-center py-4">
+                                <td colSpan={4} className="text-center py-4 text-gray-500">
                                     No advertisements found.
                                 </td>
                             </tr>

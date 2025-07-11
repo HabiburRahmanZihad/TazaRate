@@ -3,7 +3,6 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
-import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdInventory, MdAddShoppingCart } from "react-icons/md";
 import { FaTrash, FaEdit } from "react-icons/fa";
@@ -84,7 +83,7 @@ const MyProducts = () => {
                     <p className="text-lg">You haven’t added any products yet.</p>
                     <Link
                         to="/dashboard/add-product"
-                        className="btn btn-primary inline-flex items-center gap-2"
+                        className="btn btn-secondary inline-flex items-center gap-2"
                     >
                         <MdAddShoppingCart /> Add Product
                     </Link>

@@ -73,9 +73,9 @@ export const router = createBrowserRouter([
 
             { path: 'add-product', element: <VendorRoute><AddProduct /></VendorRoute> },
             { path: 'my-products', element: <VendorRoute><MyProducts /></VendorRoute> },
+            { path: 'update-product/:id', element: <VendorRoute><UpdateProduct /></VendorRoute> },
             { path: 'add-ad', element: <VendorRoute><AddAdvertisement /></VendorRoute> },
             { path: 'my-ads', element: <VendorRoute><MyAdvertisements /></VendorRoute> },
-            { path: 'update-product/:id', element: <VendorRoute><UpdateProduct /></VendorRoute> },
 
             // 🛠 Admin
             { path: 'all-users', element: <AdminRoute><AllUsers /></AdminRoute> },
