@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
+import { MdReceipt } from "react-icons/md";
 
 const AllOrdersPage = () => {
     const axiosSecure = useAxiosSecure();
@@ -13,37 +13,66 @@ const AllOrdersPage = () => {
         }
     });
 
-    if (isLoading) return <p className="text-center mt-10">Loading orders...</p>;
-    if (error) return <p className="text-center mt-10 text-red-500">Failed to load orders</p>;
-
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">📋 All Orders (Admin)</h2>
-            {orders.length === 0 ? (
-                <p>No orders found.</p>
+        <div className="max-w-7xl mx-auto px-4 py-12">
+            {/* Page Title */}
+            <div className="flex items-center gap-4 mb-10">
+                <MdReceipt className="text-2xl text-secondary" />
+                <h2 className="text-2xl font-bold text-secondary">
+                    Admin Order Management
+                </h2>
+            </div>
+
+            {/* Loading/Error States */}
+            {isLoading ? (
+                <div className="text-center text-xl text-gray-500 py-20 animate-pulse">
+                    Loading orders...
+                </div>
+            ) : error ? (
+                <div className="text-center text-xl text-red-600 py-20 font-semibold">
+                    🚫 Failed to load orders. Please try again.
+                </div>
+            ) : orders.length === 0 ? (
+                <div className="text-center py-20 text-gray-500">
+                    <p className="text-2xl font-semibold">📭 No orders found</p>
+                    <p className="text-md mt-2">Looks like there haven’t been any transactions yet.</p>
+                </div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-200">
-                        <thead>
-                            <tr className="bg-gray-100 text-left">
-                                <th className="p-3 border">Product Name</th>
-                                <th className="p-3 border">User Email</th>
-                                <th className="p-3 border">Market</th>
-                                <th className="p-3 border">Vendor</th>
-                                <th className="p-3 border">Price (৳)</th>
-                                <th className="p-3 border">Paid Date</th>
+                <div className="bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl overflow-x-auto border border-gray-200">
+                    <table className="min-w-full text-lg text-left text-neutral font-medium">
+                        <thead className="bg-secondary text-white text-md">
+                            <tr>
+                                <th className="px-6 py-5">🛒 Product</th>
+                                <th className="px-6 py-5">📧 Buyer Email</th>
+                                <th className="px-6 py-5">🏪 Market</th>
+                                <th className="px-6 py-5">👤 Vendor</th>
+                                <th className="px-6 py-5">💰 Price (৳)</th>
+                                <th className="px-6 py-5">📅 Paid On</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map(order => (
-                                <tr key={order._id} className="hover:bg-gray-50">
-                                    <td className="p-3 border">{order.productName}</td>
-                                    <td className="p-3 border">{order.userEmail}</td>
-                                    <td className="p-3 border">{order.marketName}</td>
-                                    <td className="p-3 border">{order.vendorName || '-'}</td>
-                                    <td className="p-3 border">{order.price}</td>
-                                    <td className="p-3 border">
-                                        {new Date(order.paidAt).toLocaleDateString()}
+                            {orders.map((order) => (
+                                <tr
+                                    key={order._id}
+                                    className="border-t border-secondary/30 hover:bg-gray-50 transition-all duration-200 ease-in-out"
+                                >
+                                    <td className="px-6 py-4">{order.productName}</td>
+                                    <td className="px-6 py-4">{order.userEmail}</td>
+                                    <td className="px-6 py-4">{order.marketName}</td>
+                                    <td className="px-6 py-4">
+                                        {order.vendorName || (
+                                            <span className="text-gray-400 italic">N/A</span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 font-bold text-neutral-800">
+                                        ৳ {order.price}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {new Date(order.paidAt).toLocaleDateString(undefined, {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        })}
                                     </td>
                                 </tr>
                             ))}

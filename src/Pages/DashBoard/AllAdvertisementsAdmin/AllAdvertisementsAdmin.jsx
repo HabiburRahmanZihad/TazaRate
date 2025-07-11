@@ -63,7 +63,7 @@ const AllAdvertisementsAdmin = () => {
             {/* Header */}
             <div className="flex items-center gap-3 mb-8">
                 <MdCampaign className="text-4xl text-secondary" />
-                <h2 className="text-3xl font-bold text-secondary">All Advertisements</h2>
+                <h2 className="text-2xl font-bold text-secondary">All Advertisements</h2>
             </div>
 
             {/* Table */}
