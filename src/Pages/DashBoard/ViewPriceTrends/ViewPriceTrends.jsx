@@ -10,7 +10,6 @@ import {
 } from "recharts";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { motion } from "framer-motion";
-import Loading from "../../../Components/Loader/Loading";
 
 const ViewPriceTrends = () => {
     const [products, setProducts] = useState([]);
@@ -24,7 +23,7 @@ const ViewPriceTrends = () => {
         const fetchAllProducts = async () => {
             try {
                 const res = await axiosSecure.get("/admin/products");
-                const approvedOnly = res.data.filter(p => p.status === "approved");
+                const approvedOnly = res.data.products.filter(p => p.status === "approved");
                 setProducts(approvedOnly);
             } catch (err) {
                 console.error("Error fetching products", err);
@@ -92,11 +91,10 @@ const ViewPriceTrends = () => {
                         <button
                             key={item._id}
                             onClick={() => setSelectedId(item._id)}
-                            className={`flex items-center gap-2 px-1 py-2 rounded-lg w-full text-left transition-all duration-200 hover:bg-orange-100 text-sm ${
-                                selectedId === item._id
+                            className={`flex items-center gap-2 px-1 py-2 rounded-lg w-full text-left transition-all duration-200 hover:bg-orange-100 text-sm ${selectedId === item._id
                                     ? "bg-orange-200 font-semibold text-orange-900"
                                     : "text-gray-700"
-                            }`}
+                                }`}
                         >
                             <span>🧺</span>
                             <span className="truncate">{item.itemName}</span>
@@ -112,7 +110,9 @@ const ViewPriceTrends = () => {
                     transition={{ duration: 0.4 }}
                 >
                     {loading || !product ? (
-                        <Loading></Loading>
+                        <div className="flex justify-center items-center h-72">
+                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-secondary"></div>
+                        </div>
                     ) : (
                         <>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
@@ -125,11 +125,10 @@ const ViewPriceTrends = () => {
                                     </p>
                                 </div>
                                 <div
-                                    className={`badge px-4 py-1 rounded-full text-white text-sm ${
-                                        product.status === "approved"
+                                    className={`badge px-4 py-1 rounded-full text-white text-sm ${product.status === "approved"
                                             ? "bg-green-500"
                                             : "bg-yellow-500"
-                                    }`}
+                                        }`}
                                 >
                                     {product.status}
                                 </div>

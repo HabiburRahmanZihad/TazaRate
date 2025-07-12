@@ -104,10 +104,9 @@ const DashboardHome = () => {
                 >
                     <div className="relative">
                         <img
-                            src={profilePhoto || '/default-avatar.png'}
+                            src={profilePhoto}
                             alt={name}
                             className="w-48 h-48 md:w-[250px] md:h-[250px] rounded-full object-cover border-4 border-secondary p-1 shadow-lg"
-                            onError={(e) => (e.target.src = '/default-avatar.png')}
                         />
                         <span className="absolute bottom-0 right-0 bg-gradient-to-br from-secondary to-primary text-white text-[11px] px-3 py-1 rounded-full shadow-md font-semibold uppercase">
                             {role}

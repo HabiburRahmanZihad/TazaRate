@@ -6,6 +6,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../../Components/Loader/Loading";
 import Error from "../../Error/Error";
+import NoFound from "../../../Components/NoFound/NoFound";
 
 const MyOrdersPage = () => {
     const { user } = useAuth();
@@ -45,26 +46,7 @@ const MyOrdersPage = () => {
             </motion.h2>
 
             {orders.length === 0 ? (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="text-center text-gray-500 space-y-4"
-                >
-                    <img
-                        src="/images/empty-orders.svg"
-                        alt="No Orders"
-                        className="mx-auto w-64"
-                    />
-                    <p className="text-lg">You haven't placed any orders yet.</p>
-                    <Link
-                        to="/products"
-                        className="btn btn-primary inline-flex items-center gap-2"
-                    >
-                        <FaBoxOpen />
-                        Start Shopping
-                    </Link>
-                </motion.div>
+                <NoFound></NoFound>
             ) : (
                 <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
                     <table className="min-w-full text-sm text-left">
