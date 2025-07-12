@@ -95,15 +95,25 @@ const Navbar = () => {
         `px-4 py-1 text-xl font-medium transition ${isActive ? 'text-secondary font-semibold' : 'text-primary hover:text-primary-focus'
         }`;
 
-    const navLinks = (
-        <div className="flex flex-col lg:flex-row gap-2">
-            <NavLink to="/" onClick={closeMenu}>{({ isActive }) => <p className={navItemClass(isActive)}>Home</p>}</NavLink>
-            <NavLink to="/products" onClick={closeMenu}>{({ isActive }) => <p className={navItemClass(isActive)}>All Products</p>}</NavLink>
-            {user && (
-                <NavLink to="/dashboard" onClick={closeMenu}>{({ isActive }) => <p className={navItemClass(isActive)}>Dashboard</p>}</NavLink>
-            )}
-        </div>
-    );
+const navLinks = (
+    <div className="flex flex-col lg:flex-row gap-2">
+        <NavLink to="/" onClick={closeMenu}>
+            {({ isActive }) => <p className={navItemClass(isActive)}>Home</p>}
+        </NavLink>
+        <NavLink to="/products" onClick={closeMenu}>
+            {({ isActive }) => <p className={navItemClass(isActive)}>All Products</p>}
+        </NavLink>
+        <NavLink to="/coverage" onClick={closeMenu}>
+            {({ isActive }) => <p className={navItemClass(isActive)}>Coverage</p>}
+        </NavLink>
+        {user && (
+            <NavLink to="/dashboard" onClick={closeMenu}>
+                {({ isActive }) => <p className={navItemClass(isActive)}>Dashboard</p>}
+            </NavLink>
+        )}
+    </div>
+);
+
 
     return (
         <nav className="navbar sticky top-0 z-50 shadow bg-base-200 text-white">

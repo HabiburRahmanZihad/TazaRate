@@ -33,6 +33,7 @@ import Help from '../Pages/Help/Help';
 import Error from '../Pages/Error/Error';
 import DashboardError from '../Pages/DashBoard/DashboardError/DashboardError';
 import AdminVendorRoute from './AdminVendorRoute';
+import Coverage from '../Pages/Coverage/Coverage';
 
 export const router = createBrowserRouter([
     {
@@ -50,6 +51,7 @@ export const router = createBrowserRouter([
             { path: '/privacy', element: <Privacy /> },
             { path: '/refund', element: <Refund /> },
             { path: '/help', element: <Help /> },
+            { path: '/coverage', element: <Coverage /> },
             { path: '*', element: <Error /> },
         ],
     },
