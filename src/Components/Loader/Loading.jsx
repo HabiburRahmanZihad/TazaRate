@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
+import LogoImg from "../../assets/AllPic/Logo_noBgColor.png"; // Adjust the path as necessary
 
 const messages = [
     "Gathering the freshest prices...",
@@ -30,7 +31,7 @@ const Loading = () => {
             {/* Logo Box */}
             <div className="absolute top-8 bg-white rounded-xl shadow-xl px-6 py-2 flex items-center gap-3 border border-base-300">
                 <img
-                    src="/src/assets/AllPic/Logo_noBgColor.png"
+                    src={LogoImg}
                     alt="TazaRate Logo"
                     className="h-12 w-auto object-contain"
                 />
