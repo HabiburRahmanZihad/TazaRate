@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import { MdCampaign, MdCheckCircle, MdCancel } from 'react-icons/md';
+import Loading from '../../../Components/Loader/Loading';
 
 const AllAdvertisementsAdmin = () => {
     const axiosSecure = useAxiosSecure();
@@ -69,7 +70,7 @@ const AllAdvertisementsAdmin = () => {
             {/* Table */}
             <div className="bg-white shadow-xl rounded-xl overflow-x-auto border border-gray-200">
                 {isLoading ? (
-                    <div className="text-center py-10 text-gray-500">Loading advertisements...</div>
+                    <Loading></Loading>
                 ) : ads.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">
                         <p className="text-lg font-medium">😕 No advertisements found.</p>

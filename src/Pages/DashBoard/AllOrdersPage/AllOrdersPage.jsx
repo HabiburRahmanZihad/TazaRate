@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { MdReceipt } from "react-icons/md";
+import Loading from "../../../Components/Loader/Loading";
+import Error from "../../Error/Error";
+import NoFound from "../../../Components/NoFound/NoFound";
 
 const AllOrdersPage = () => {
     const axiosSecure = useAxiosSecure();
@@ -25,18 +28,11 @@ const AllOrdersPage = () => {
 
             {/* Loading/Error States */}
             {isLoading ? (
-                <div className="text-center text-xl text-gray-500 py-20 animate-pulse">
-                    Loading orders...
-                </div>
+                <Loading />
             ) : error ? (
-                <div className="text-center text-xl text-red-600 py-20 font-semibold">
-                    🚫 Failed to load orders. Please try again.
-                </div>
+                <Error />
             ) : orders.length === 0 ? (
-                <div className="text-center py-20 text-gray-500">
-                    <p className="text-2xl font-semibold">📭 No orders found</p>
-                    <p className="text-md mt-2">Looks like there haven’t been any transactions yet.</p>
-                </div>
+                <NoFound type="order" title="No orders found" message="Looks like there haven’t been any transactions yet." />
             ) : (
                 <div className="bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl overflow-x-auto border border-gray-200">
                     <table className="min-w-full text-lg text-left text-neutral font-medium">

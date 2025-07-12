@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { motion } from "framer-motion";
+import Loading from "../../../Components/Loader/Loading";
 
 const ViewPriceTrends = () => {
     const [products, setProducts] = useState([]);
@@ -111,9 +112,7 @@ const ViewPriceTrends = () => {
                     transition={{ duration: 0.4 }}
                 >
                     {loading || !product ? (
-                        <div className="flex justify-center items-center h-72">
-                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
-                        </div>
+                        <Loading></Loading>
                     ) : (
                         <>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">

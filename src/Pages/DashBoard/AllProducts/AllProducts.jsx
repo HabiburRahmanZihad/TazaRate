@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { MdInventory, MdCheckCircle, MdCancel, MdDelete, MdEdit, MdSearch, MdArrowBack, MdArrowForward } from 'react-icons/md';
 import Swal from 'sweetalert2';
+import Loading from '../../../Components/Loader/Loading';
+import Error from '../../Error/Error';
 
 const PRODUCTS_PER_PAGE = 15;
 
@@ -139,11 +141,11 @@ const AllProducts = () => {
             </div>
 
             {isLoading ? (
-                <div className="p-4 text-center text-gray-500">Loading products...</div>
+                <Loading />
             ) : isError ? (
-                <div className="p-4 text-red-500">Error: {error.message}</div>
+                <Error />
             ) : products.length === 0 ? (
-                <div className="p-10 text-center text-gray-500">No products found.</div>
+                <NoFound type="product" title="No products found" message="Looks like there haven’t been any products yet." />
             ) : (
                 <>
                     <div className="overflow-x-auto">

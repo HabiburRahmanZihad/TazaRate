@@ -18,6 +18,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import useUserRole from "../../hooks/useUserRole";
 import NoFound from "../../Components/NoFound/NoFound";
+import Loading from "../../Components/Loader/Loading";
 
 const getPriceChangeSummary = (data) => {
     if (data.length < 2) return null;
@@ -141,7 +142,7 @@ const ProductDetailsPage = () => {
             .finally(() => setLoadingCompare(false));
     };
 
-    if (!product) return <div className="text-center py-10 text-lg text-gray-600"><FaClock className="inline mr-2" />Loading product details...</div>;
+    if (!product) return <Loading />;
 
     const availableDates = Array.from(new Set(product?.prices?.map(p => new Date(p.date).toISOString().split("T")[0]))).sort();
     const priceSummary = getPriceChangeSummary(compareData);
@@ -157,7 +158,7 @@ const ProductDetailsPage = () => {
                         className="w-full h-64 object-cover rounded-xl border"
                     />
                     <div className="space-y-4">
-                        <h1 className="text-3xl font-bold text-secondary">{product.itemName}</h1>
+                        <h1 className="text-3xl font-extrabold text-primary">{product.itemName}</h1>
                         <p className=" text-gray-600 flex items-center gap-2"><FaStore className="text-accent" /> {product.marketName}</p>
                         <p className=" text-gray-600 flex items-center gap-2"><FaCalendarAlt className="text-accent" /> {product.date}</p>
                         <p className=" text-gray-600 flex items-center gap-2"><FaUserAlt className="text-accent" /> {product.vendorName}</p>
@@ -170,7 +171,7 @@ const ProductDetailsPage = () => {
             <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 grid md:grid-cols-2 gap-10">
                 {/* Price History List */}
                 <div>
-                    <h2 className="text-xl font-semibold mb-4 text-secondary">Price History</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">Price History</h2>
                     <ul className="space-y-2">
                         {product.prices?.map((entry, idx) => (
                             <li key={idx} className="text-sm text-gray-700 flex items-center gap-2">
@@ -184,7 +185,7 @@ const ProductDetailsPage = () => {
 
                 {/* Chart and Compare */}
                 <div>
-                    <h2 className="text-xl font-semibold mb-4 text-secondary">Compare Price</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">Compare Price</h2>
                     <div className="flex flex-wrap items-center gap-3 mb-4">
                         <select
                             value={compareDate}
@@ -242,7 +243,7 @@ const ProductDetailsPage = () => {
 
             {/* Review Section */}
             <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
-                <h2 className="text-xl font-semibold text-secondary flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-primary flex items-center gap-2">
                     <FaComments className="text-accent" /> Reviews
                 </h2>
 
@@ -301,7 +302,7 @@ const ProductDetailsPage = () => {
             {!roleLoading && role === "user" && (
                 <div className="text-center space-x-3">
                     <Link to={`/payment/${id}`}>
-                        <button className="btn btn-secondary"><FaShoppingCart className="inline mr-1" /> Buy Now</button>
+                        <button className="btn btn-accent text-white"><FaShoppingCart className="inline mr-1" /> Buy Now</button>
                     </Link>
                     <button
                         onClick={handleWatchlist}
@@ -309,7 +310,7 @@ const ProductDetailsPage = () => {
                         disabled={watchlisted}
                     >
                         {watchlisted ? (
-                            <><FaStar className="inline text-yellow-500" /> In Watchlist</>
+                            <><FaStar className="inline text-primary" /> In Watchlist</>
                         ) : (
                             <><FaStar className="inline" /> Add to Watchlist</>
                         )}

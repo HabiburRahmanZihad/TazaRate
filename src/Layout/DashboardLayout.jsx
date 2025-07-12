@@ -17,6 +17,7 @@ import useUserRole from '../hooks/useUserRole';
 import Navbar from '../Components/Shared/Navbar/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollToTop from '../hooks/ScrollToTop';
+import Loading from '../Components/Loader/Loading';
 
 const DashboardLayout = () => {
     const { role, roleLoading } = useUserRole();
@@ -172,7 +173,7 @@ const DashboardLayout = () => {
                             </div>
 
                             {roleLoading ? (
-                                <p className="text-center text-neutral/60">Loading menu...</p>
+                                <Loading></Loading>
                             ) : (
                                 <nav className="space-y-2">
                                     <NavLink to="/dashboard" end className={navClasses} onClick={handleNavClick}>

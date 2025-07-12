@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdInventory, MdAddShoppingCart } from "react-icons/md";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import Loading from "../../../Components/Loader/Loading";
 
 const MyProducts = () => {
     const { user } = useAuth();
@@ -51,13 +52,7 @@ const MyProducts = () => {
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-20">
-                <div className="text-gray-400 text-lg animate-pulse">
-                    Loading your products...
-                </div>
-            </div>
-        );
+        return <Loading></Loading>;
     }
 
     return (

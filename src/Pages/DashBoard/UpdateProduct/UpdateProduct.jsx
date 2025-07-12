@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { MdEditNote } from "react-icons/md";
 import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../../Components/Loader/Loading";
 
 
 
@@ -107,7 +108,7 @@ const UpdateProduct = () => {
         }
     };
 
-    if (loading) return <p className="text-center py-10">Loading product...</p>;
+    if (loading) return <Loading></Loading>;
 
     return (
         <div className="max-w-4xl mx-auto px-4 md:px-8 py-10 bg-white rounded-xl shadow-lg">

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { MdPeople } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import { FiSearch } from 'react-icons/fi';
+import Loading from '../../../Components/Loader/Loading';
 
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -77,7 +78,7 @@ const AllUsers = () => {
             </div>
 
             {isLoading ? (
-                <p className="text-center text-gray-500">Loading users...</p>
+                <Loading></Loading>
             ) : users.length === 0 ? (
                 <div className="text-center py-10 text-gray-500">
                     <p className="text-lg font-medium">😕 No users found matching your search.</p>

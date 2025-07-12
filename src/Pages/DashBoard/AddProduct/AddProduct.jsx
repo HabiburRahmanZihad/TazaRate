@@ -7,6 +7,7 @@ import { MdAddCircleOutline } from "react-icons/md";
 import uploadImageToImgbb from "../../../hooks/uploadImageToImgbb";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../Components/Loader/Loading";
 
 const AddProduct = () => {
     const { user } = useAuth();
@@ -222,7 +223,7 @@ const AddProduct = () => {
                         className="btn btn-secondary w-full"
                     >
                         {loading ? (
-                            <span className="loading loading-spinner loading-sm"></span>
+                            <Loading></Loading>
                         ) : (
                             <span className="inline-flex items-center gap-2">
                                 <MdAddCircleOutline className="text-lg" />

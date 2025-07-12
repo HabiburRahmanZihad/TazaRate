@@ -6,6 +6,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTrashAlt, FaPlus } from "react-icons/fa";
+import Loading from "../../../Components/Loader/Loading";
 
 const ManageWatchlist = () => {
     const { user } = useAuth();
@@ -47,13 +48,7 @@ const ManageWatchlist = () => {
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-20">
-                <div className="text-gray-400 text-lg animate-pulse">
-                    Loading your awesome watchlist...
-                </div>
-            </div>
-        );
+        return <Loading></Loading>;
     }
 
     return (

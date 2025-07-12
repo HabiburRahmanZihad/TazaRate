@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaBoxOpen, FaInfoCircle } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../Components/Loader/Loading";
+import Error from "../../Error/Error";
 
 const MyOrdersPage = () => {
     const { user } = useAuth();
@@ -23,19 +25,11 @@ const MyOrdersPage = () => {
     });
 
     if (isLoading) {
-        return (
-            <div className="flex justify-center items-center py-20">
-                <p className="text-gray-400 text-lg animate-pulse">Fetching your orders...</p>
-            </div>
-        );
+        return <Loading></Loading>;
     }
 
     if (error) {
-        return (
-            <div className="text-center mt-10 text-red-500 font-medium">
-                Failed to load your orders. Please try again.
-            </div>
-        );
+        return <Error />
     }
 
     return (

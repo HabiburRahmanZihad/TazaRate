@@ -4,6 +4,8 @@ import { Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import 'swiper/css';
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../Loader/Loading";
+import Error from "../../../Pages/Error/Error";
 
 const AdvertisementHighlights = () => {
     const axiosSecure = useAxiosSecure();
@@ -12,8 +14,8 @@ const AdvertisementHighlights = () => {
         queryFn: async () => (await axiosSecure.get('/advertisements/accepted')).data
     });
 
-    if (isLoading) return <p className="text-center text-neutral">Loading awesome deals...</p>;
-    if (error) return <p className="text-center text-error">Oops! Something went wrong.</p>;
+    if (isLoading) return <Loading></Loading>;
+    if (error) return <Error></Error>;
 
     return (
         <div className="bg-base-100 py-12 rounded-xl">

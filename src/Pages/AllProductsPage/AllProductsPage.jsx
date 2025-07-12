@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUserTag, FaMoneyBillWave } from "react-icons/fa";
 import Loading from "../../Components/Loader/Loading";
 import NoFound from "../../Components/NoFound/NoFound";
+import Error from "../Error/Error";
 
 const PAGE_SIZE = 32;
 
@@ -118,10 +119,10 @@ const AllProductsPage = () => {
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-neutral mb-1">Start Date</label>
                         <div className="relative">
-                            <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
+                            <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-accent text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-primary w-full pl-10"
                                 value={filters.startDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
                             />
@@ -132,10 +133,10 @@ const AllProductsPage = () => {
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-neutral mb-1">End Date</label>
                         <div className="relative">
-                            <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
+                            <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-accent text-sm z-10 pointer-events-none" />
                             <input
                                 type="date"
-                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-primary w-full pl-10"
                                 value={filters.endDate}
                                 onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
                             />
@@ -146,11 +147,11 @@ const AllProductsPage = () => {
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-neutral mb-1">Search</label>
                         <div className="relative">
-                            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm z-10 pointer-events-none" />
+                            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-accent text-sm z-10 pointer-events-none" />
                             <input
                                 type="text"
                                 placeholder="Search by product or market"
-                                className="input input-sm input-bordered focus:outline-none border-secondary w-full pl-10"
+                                className="input input-sm input-bordered focus:outline-none border-primary w-full pl-10"
                                 value={filters.searchQuery}
                                 onChange={(e) => setFilters((f) => ({ ...f, searchQuery: e.target.value }))}
                             />
@@ -162,7 +163,7 @@ const AllProductsPage = () => {
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-neutral mb-1">Sort By</label>
                             <select
-                                className="select select-sm w-full focus:outline-none border-secondary"
+                                className="select select-sm w-full focus:outline-none border-primary"
                                 value={`${filters.sortBy}_${filters.order}`}
                                 onChange={(e) => {
                                     const [sb, o] = e.target.value.split("_");
@@ -174,7 +175,7 @@ const AllProductsPage = () => {
                                 <option value="pricePerUnit_desc">Price – High to Low</option>
                             </select>
                         </div>
-                        <button onClick={clearFilters} className="btn btn-secondary btn-sm w-full mt-auto">
+                        <button onClick={clearFilters} className="btn btn-accent text-white  w-full mt-auto">
                             Clear Filters
                         </button>
                     </div>
@@ -185,7 +186,7 @@ const AllProductsPage = () => {
             {loading ? (
                 <Loading />
             ) : error ? (
-                <div className="text-center text-red-500">{error}</div>
+                <Error></Error>
             ) : !products.length ? (
                 <NoFound
                     type="product"
@@ -218,7 +219,7 @@ const AllProductsPage = () => {
                                             <div className="flex items-center gap-1"><FaMapMarkerAlt /> {prod.marketName}</div>
                                             <div className="flex items-center gap-1"><FaUserTag /> {prod.vendorName}</div>
                                         </div>
-                                        <button onClick={() => navigate(`/products/${prod._id}`)} className="btn btn-sm btn-secondary mt-4">
+                                        <button onClick={() => navigate(`/products/${prod._id}`)} className="btn text-white btn-accent mt-4">
                                             View Details
                                         </button>
                                     </div>

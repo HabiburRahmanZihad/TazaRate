@@ -8,6 +8,8 @@ import {
     FiFileText, FiClipboard, FiUsers, FiUser, FiMail, FiShield,
     FiCalendar, FiClock
 } from 'react-icons/fi';
+import Loading from '../../../Components/Loader/Loading';
+import Error from '../../Error/Error';
 
 const DashboardHome = () => {
     const { user } = useAuth();
@@ -80,15 +82,11 @@ const DashboardHome = () => {
     };
 
     if (loading) {
-        return <p className="p-6 text-gray-500 animate-pulse">Loading dashboard...</p>;
+        return <Loading></Loading>;
     }
 
     if (error || !userData) {
-        return (
-            <p className="p-6 text-red-600">
-                Something went wrong. Please refresh or try again later.
-            </p>
-        );
+        return <Error />
     }
 
     const { name, email, role, profilePhoto, createdAt, lastLogin } = userData;

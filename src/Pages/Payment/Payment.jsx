@@ -5,6 +5,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { FaSpinner, FaExclamationTriangle } from "react-icons/fa";
 import PaymentForm from "./PaymentForm";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loading from "../../Components/Loader/Loading";
+import Error from "../Error/Error";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -26,22 +28,11 @@ const Payment = () => {
     });
 
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen text-secondary">
-                <FaSpinner className="animate-spin text-4xl mb-3" />
-                <p className="text-xl font-medium">Loading payment details...</p>
-            </div>
-        );
+        return <Loading />;
     }
 
     if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen text-error">
-                <FaExclamationTriangle className="text-5xl mb-3" />
-                <p className="text-xl font-semibold">Failed to load product info</p>
-                <p className="text-sm text-red-400">Please check your internet connection or try again later.</p>
-            </div>
-        );
+        return <Error />;
     }
 
     return (

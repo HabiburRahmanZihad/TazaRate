@@ -8,12 +8,8 @@ import logo from '../../../assets/AllPic/Logo_noBgColor.png';
 
 const Footer = () => {
     return (
-        <motion.footer
+        <footer
             className="bg-gray-900 text-white"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
         >
             <div className="container mx-auto px-4 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -111,7 +107,7 @@ const Footer = () => {
                             </div>
                             <div className="flex items-start gap-3">
                                 <FaPhone className="text-green-400 mt-1" />
-                                <span>+880-123-456-789</span>
+                                <span>+880-132-945-0000</span>
                             </div>
                             <div className="flex items-start gap-3">
                                 <FaEnvelope className="text-green-400 mt-1" />
@@ -127,7 +123,7 @@ const Footer = () => {
                     Built with ❤️ for your local bazaar.
                 </div>
             </div>
-        </motion.footer>
+        </footer>
     );
 };
 
