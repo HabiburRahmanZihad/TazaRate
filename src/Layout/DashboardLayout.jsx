@@ -18,6 +18,7 @@ import Navbar from '../Components/Shared/Navbar/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollToTop from '../hooks/ScrollToTop';
 import Loading from '../Components/Loader/Loading';
+import Footer from '../Components/Shared/Footer/Footer';
 
 const DashboardLayout = () => {
     const { role, roleLoading } = useUserRole();
@@ -191,6 +192,8 @@ const DashboardLayout = () => {
                     <Outlet />
                 </main>
             </div>
+
+            <Footer></Footer>
         </div>
     );
 };
