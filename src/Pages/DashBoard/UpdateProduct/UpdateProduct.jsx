@@ -97,7 +97,6 @@ const UpdateProduct = () => {
             const res = await axiosSecure.put(`/products/${id}`, updatedProduct);
             if (res.data.modifiedCount || res.data.success) {
                 Swal.fire("Success", "Product updated!", "success");
-                navigate("/dashboard/my-products");
             } else {
                 Swal.fire("Info", "No changes made.", "info");
             }
