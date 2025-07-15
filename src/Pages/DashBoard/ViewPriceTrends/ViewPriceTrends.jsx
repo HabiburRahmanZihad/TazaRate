@@ -22,9 +22,8 @@ const ViewPriceTrends = () => {
     useEffect(() => {
         const fetchAllProducts = async () => {
             try {
-                const res = await axiosSecure.get("/admin/products");
-                const approvedOnly = res.data.products.filter(p => p.status === "approved");
-                setProducts(approvedOnly);
+                const res = await axiosSecure.get("/user/allproduct");
+                setProducts(res.data);
             } catch (err) {
                 console.error("Error fetching products", err);
             }
@@ -92,8 +91,8 @@ const ViewPriceTrends = () => {
                             key={item._id}
                             onClick={() => setSelectedId(item._id)}
                             className={`flex items-center gap-2 px-1 py-2 rounded-lg w-full text-left transition-all duration-200 hover:bg-orange-100 text-sm ${selectedId === item._id
-                                    ? "bg-orange-200 font-semibold text-orange-900"
-                                    : "text-gray-700"
+                                ? "bg-orange-200 font-semibold text-orange-900"
+                                : "text-gray-700"
                                 }`}
                         >
                             <span>🧺</span>
@@ -126,8 +125,8 @@ const ViewPriceTrends = () => {
                                 </div>
                                 <div
                                     className={`badge px-4 py-1 rounded-full text-white text-sm ${product.status === "approved"
-                                            ? "bg-green-500"
-                                            : "bg-yellow-500"
+                                        ? "bg-green-500"
+                                        : "bg-yellow-500"
                                         }`}
                                 >
                                     {product.status}
