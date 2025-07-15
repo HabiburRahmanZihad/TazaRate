@@ -44,7 +44,6 @@ const AllProducts = () => {
         data,
         isLoading,
         isError,
-        error,
         refetch,
     } = useQuery({
         queryKey: ['all-products', search, page],
@@ -108,19 +107,20 @@ const AllProducts = () => {
     const canGoNext = page < totalPages;
 
     return (
-        <div className="p-6 max-w-7xl mx-auto bg-white rounded-xl shadow">
-            <div className="flex items-center justify-between mb-6">
+        <div className="p-4 sm:p-6 max-w-7xl mx-auto bg-white rounded-xl shadow">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                     <MdInventory className="text-3xl text-secondary" />
                     <h2 className="text-2xl font-bold text-secondary">All Products</h2>
                 </div>
-                <div className="flex items-center gap-2">
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     <input
                         type="text"
                         placeholder="Search by item/vendor name/email..."
                         value={searchInput}
                         onChange={e => setSearchInput(e.target.value)}
-                        className="border-2 border-secondary rounded-md px-3 py-1 focus:outline-none w-72"
+                        className="border-2 border-secondary rounded-md px-3 py-2 focus:outline-none w-full sm:w-72"
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
                                 setSearch(searchInput.trim());
@@ -133,7 +133,7 @@ const AllProducts = () => {
                             setSearch(searchInput.trim());
                             setPage(1);
                         }}
-                        className="flex items-center bg-secondary text-white px-3 py-1 rounded hover:bg-secondary/90"
+                        className="flex items-center justify-center bg-secondary text-white px-3 py-2 rounded hover:bg-secondary/90"
                         aria-label="Search"
                     >
                         <MdSearch />
@@ -146,11 +146,15 @@ const AllProducts = () => {
             ) : isError ? (
                 <Error />
             ) : products.length === 0 ? (
-                <NoFound type="product" title="No products found" message="Looks like there haven’t been any products yet." />
+                <NoFound
+                    type="product"
+                    title="No products found"
+                    message="Looks like there haven’t been any products yet."
+                />
             ) : (
                 <>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full table-auto">
+                        <table className="min-w-full table-auto text-sm">
                             <thead className="bg-secondary text-white">
                                 <tr>
                                     <th className="p-3 text-left">Image</th>
@@ -166,9 +170,16 @@ const AllProducts = () => {
                             </thead>
                             <tbody>
                                 {products.map(p => (
-                                    <tr key={p._id} className="border-t border-secondary/30 hover:bg-gray-50">
+                                    <tr
+                                        key={p._id}
+                                        className="border-t border-secondary/30 hover:bg-gray-50"
+                                    >
                                         <td className="p-2">
-                                            <img src={p.imageUrl} alt={p.itemName} className="w-12 h-12 rounded" />
+                                            <img
+                                                src={p.imageUrl}
+                                                alt={p.itemName}
+                                                className="w-12 h-12 rounded object-cover"
+                                            />
                                         </td>
                                         <td className="p-2">{p.itemName}</td>
                                         <td className="p-2">{p.vendorName}</td>
@@ -178,16 +189,16 @@ const AllProducts = () => {
                                         <td className="p-2">৳{p.pricePerUnit}</td>
                                         <td
                                             className={`p-2 font-semibold ${p.status === 'approved'
-                                                ? 'text-green-600'
-                                                : p.status === 'rejected'
-                                                    ? 'text-red-600'
-                                                    : 'text-yellow-600'
+                                                    ? 'text-green-600'
+                                                    : p.status === 'rejected'
+                                                        ? 'text-red-600'
+                                                        : 'text-yellow-600'
                                                 }`}
                                             title={p.status === 'rejected' ? p.rejectionReason : ''}
                                         >
                                             {p.status}
                                         </td>
-                                        <td className="p-2 flex flex-col gap-2">
+                                        <td className="p-2 flex flex-col sm:flex-row sm:flex-wrap gap-2">
                                             {p.status === 'pending' && (
                                                 <>
                                                     <button
@@ -224,11 +235,13 @@ const AllProducts = () => {
                     </div>
 
                     {/* Pagination controls */}
-                    <div className="flex justify-between items-center mt-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-4">
                         <button
                             onClick={() => canGoPrev && setPage(prev => prev - 1)}
                             disabled={!canGoPrev}
-                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoPrev ? 'bg-secondary text-white hover:bg-secondary/90' : 'bg-gray-300 cursor-not-allowed'
+                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoPrev
+                                    ? 'bg-secondary text-white hover:bg-secondary/90'
+                                    : 'bg-gray-300 cursor-not-allowed'
                                 }`}
                         >
                             <MdArrowBack /> Prev
@@ -239,7 +252,9 @@ const AllProducts = () => {
                         <button
                             onClick={() => canGoNext && setPage(prev => prev + 1)}
                             disabled={!canGoNext}
-                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoNext ? 'bg-secondary text-white hover:bg-secondary/90' : 'bg-gray-300 cursor-not-allowed'
+                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoNext
+                                    ? 'bg-secondary text-white hover:bg-secondary/90'
+                                    : 'bg-gray-300 cursor-not-allowed'
                                 }`}
                         >
                             Next <MdArrowForward />
