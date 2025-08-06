@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
-import LogoImg from "../../assets/AllPic/Logo_noBgColor.png"; // Adjust the path as necessary
+import LogoImg from "../../assets/AllPic/Logo_noBgColor.png";
 
 const messages = [
     "Gathering the freshest prices...",
@@ -24,22 +24,32 @@ const Loading = () => {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black backdrop-blur-[3px]"
             role="status"
             aria-live="polite"
         >
-            {/* Logo Box */}
-            <div className="absolute top-8 bg-white rounded-xl shadow-xl px-6 py-2 flex items-center gap-3 border border-base-300">
+            {/* Logo Box with Glow */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="absolute top-8 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-xl shadow-md flex items-center gap-3 animate-pulse"
+            >
                 <img
                     src={LogoImg}
                     alt="TazaRate Logo"
-                    className="h-12 w-auto object-contain"
+                    className="h-10 w-auto object-contain drop-shadow"
                 />
-                <p className="text-lg font-bold text-primary tracking-tight">TazaRate</p>
-            </div>
+                <p className="text-xl font-bold text-green-300 tracking-tight">TazaRate</p>
+            </motion.div>
 
-            {/* Lottie Spinner */}
-            <div className="w-36 h-36 sm:w-48 sm:h-48 mb-4">
+            {/* Lottie Spinner with Neon Ring */}
+            <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="relative w-36 h-36 sm:w-48 sm:h-48 mb-6 rounded-full ring-4 ring-green-500/30 ring-offset-4 ring-offset-black"
+            >
                 <Player
                     autoplay
                     loop
@@ -47,26 +57,34 @@ const Loading = () => {
                     style={{ height: '100%', width: '100%' }}
                     aria-label="Loading animation"
                 />
-            </div>
+            </motion.div>
 
             {/* Animated Message */}
             <AnimatePresence mode="wait">
                 <motion.p
                     key={index}
-                    className="text-white text-base sm:text-lg font-medium tracking-wide text-center px-6"
-                    initial={{ opacity: 0, y: 5 }}
+                    className="text-white text-center text-sm sm:text-lg font-medium px-6 tracking-wide"
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.4 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5 }}
                 >
                     {messages[index]}
                 </motion.p>
             </AnimatePresence>
 
-            {/* Animated Progress Bar */}
+            {/* Animated Glowing Progress Bar */}
             <div className="w-56 h-2 bg-white/20 mt-6 rounded-full overflow-hidden relative">
-                <div className="absolute inset-0 animate-loading-gradient bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%]"></div>
+                <div className="absolute inset-0 animate-[loadingBar_2s_linear_infinite] bg-gradient-to-r from-green-400 via-green-200 to-green-400 bg-[length:200%] rounded-full" />
             </div>
+
+            {/* Tailwind custom animation */}
+            <style>{`
+                @keyframes loadingBar {
+                    0% { background-position: 200% 0; }
+                    100% { background-position: -200% 0; }
+                }
+            `}</style>
         </div>
     );
 };
