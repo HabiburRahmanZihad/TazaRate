@@ -150,34 +150,51 @@ const ProductDetailsPage = () => {
     return (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
             {/* Product Info Section */}
-            <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
+            <section className="bg-base-100 rounded-2xl shadow-xl p-6 md:p-8 space-y-6">
                 <div className="grid md:grid-cols-2 gap-8 items-center">
                     <img
                         src={product.imageUrl}
                         alt={product.itemName}
-                        className="w-full h-64 object-cover rounded-xl border"
+                        className="w-full h-64 object-cover rounded-xl border border-base-300"
                     />
                     <div className="space-y-4">
-                        <h1 className="text-3xl font-extrabold text-primary">{product.itemName}</h1>
-                        <p className=" text-gray-600 flex items-center gap-2"><FaStore className="text-accent" /> {product.marketName}</p>
-                        <p className=" text-gray-600 flex items-center gap-2"><FaCalendarAlt className="text-accent" /> {product.date}</p>
-                        <p className=" text-gray-600 flex items-center gap-2"><FaUserAlt className="text-accent" /> {product.vendorName}</p>
-                        <p className=" text-gray-600 flex items-center gap-2"><FaEnvelope className="text-accent" /> {product.vendorEmail}</p>
+                        <h1 className="text-3xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            {product.itemName}
+                        </h1>
+                        <p className="text-neutral flex items-center gap-2">
+                            <FaStore className="text-accent" /> {product.marketName}
+                        </p>
+                        <p className="text-neutral flex items-center gap-2">
+                            <FaCalendarAlt className="text-accent" /> {product.date}
+                        </p>
+                        <p className="text-neutral flex items-center gap-2">
+                            <FaUserAlt className="text-accent" /> {product.vendorName}
+                        </p>
+                        <p className="text-neutral flex items-center gap-2">
+                            <FaEnvelope className="text-accent" /> {product.vendorEmail}
+                        </p>
                     </div>
                 </div>
             </section>
 
             {/* Price History + Chart */}
-            <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 grid md:grid-cols-2 gap-10">
+            <section className="bg-base-100 rounded-2xl shadow-xl p-6 md:p-8 grid md:grid-cols-2 gap-10">
                 {/* Price History List */}
                 <div>
-                    <h2 className="text-xl font-semibold mb-4 text-primary">Price History</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">
+                        Price History
+                    </h2>
                     <ul className="space-y-2">
                         {product.prices?.map((entry, idx) => (
-                            <li key={idx} className="text-sm text-gray-700 flex items-center gap-2">
+                            <li
+                                key={idx}
+                                className="text-sm text-neutral flex items-center gap-2"
+                            >
                                 <FaCalendarAlt className="text-accent" />
                                 <span>{new Date(entry.date).toLocaleDateString()}</span>
-                                <span className="font-semibold text-primary">৳{entry.price}</span>
+                                <span className="font-semibold text-primary">
+                                    ৳{entry.price}
+                                </span>
                             </li>
                         ))}
                     </ul>
@@ -185,21 +202,25 @@ const ProductDetailsPage = () => {
 
                 {/* Chart and Compare */}
                 <div>
-                    <h2 className="text-xl font-semibold mb-4 text-primary">Compare Price</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">
+                        Compare Price
+                    </h2>
                     <div className="flex flex-wrap items-center gap-3 mb-4">
                         <select
                             value={compareDate}
                             onChange={(e) => setCompareDate(e.target.value)}
-                            className="select select-bordered  w-44"
+                            className="select select-bordered w-44"
                         >
                             <option value="">Select a date</option>
-                            {availableDates.map(date => (
-                                <option key={date} value={date}>{date}</option>
+                            {availableDates.map((date) => (
+                                <option key={date} value={date}>
+                                    {date}
+                                </option>
                             ))}
                         </select>
                         <button
                             onClick={handleCompare}
-                            className="btn  btn-accent text-white"
+                            className="btn btn-primary text-white"
                             disabled={!compareDate || loadingCompare}
                         >
                             {loadingCompare ? "Loading..." : "Compare"}
@@ -217,14 +238,14 @@ const ProductDetailsPage = () => {
                                     <Line
                                         type="monotone"
                                         dataKey="price"
-                                        stroke="#3C7A4F"
+                                        stroke="#22c55e"
                                         strokeWidth={2}
                                         dot={{ r: 4 }}
                                     />
                                     {priceSummary && (
                                         <ReferenceLine
                                             y={priceSummary.previousPrice}
-                                            stroke="red"
+                                            stroke="#ef4444"
                                             strokeDasharray="5 5"
                                             label="Previous Price"
                                         />
@@ -233,7 +254,8 @@ const ProductDetailsPage = () => {
                             </ResponsiveContainer>
                             {priceSummary && (
                                 <p className={`pt-2 font-medium ${priceSummary.color}`}>
-                                    <FaCheck className="inline mr-1" />{priceSummary.message}
+                                    <FaCheck className="inline mr-1" />
+                                    {priceSummary.message}
                                 </p>
                             )}
                         </>
@@ -242,7 +264,7 @@ const ProductDetailsPage = () => {
             </section>
 
             {/* Review Section */}
-            <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
+            <section className="bg-base-100 rounded-2xl shadow-xl p-6 md:p-8 space-y-6">
                 <h2 className="text-xl font-semibold text-primary flex items-center gap-2">
                     <FaComments className="text-accent" /> Reviews
                 </h2>
@@ -252,24 +274,37 @@ const ProductDetailsPage = () => {
                         <select
                             value={rating}
                             onChange={(e) => setRating(+e.target.value)}
-                            className="select select-bordered w-full"
+                            className="select w-full focus:outline-none focus:ring-2 focus:ring-primary border border-primary"
                         >
                             <option value="0">Rate…</option>
-                            {[1, 2, 3, 4, 5].map(n => (
-                                <option key={n} value={n}>{n} Star{n > 1 && 's'}</option>
+                            {[1, 2, 3, 4, 5].map((n) => (
+                                <option key={n} value={n}>
+                                    {n} Star{n > 1 && "s"}
+                                </option>
                             ))}
                         </select>
+
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            className="textarea textarea-bordered w-full"
+                            className="textarea w-full focus:outline-none focus:ring-2 focus:ring-primary border border-primary"
                             placeholder="Write your review..."
                             rows={3}
                         />
+
                         <div className="flex flex-wrap gap-2">
                             <button onClick={handleReviewSubmit} className="btn btn-primary text-neutral btn-sm">
-                                {userReview ? <><FaEdit className="inline mr-1" /> Update</> : <><FaCheck className="inline mr-1" /> Submit</>}
+                                {userReview ? (
+                                    <>
+                                        <FaEdit className="inline mr-1" /> Update
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaCheck className="inline mr-1" /> Submit
+                                    </>
+                                )}
                             </button>
+
                             {userReview && (
                                 <button onClick={handleDeleteReview} className="btn btn-error btn-sm">
                                     <FaTrash className="inline mr-1" /> Delete
@@ -279,16 +314,18 @@ const ProductDetailsPage = () => {
                     </div>
                 )}
 
-                <div className="space-y-4 border-t pt-4">
-                    {reviews.length ? reviews.map(r => (
-                        <div key={r._id} className="space-y-1">
-                            <p className="text-sm font-semibold text-neutral">
-                                {r.userName || r.userEmail} — <FaStar className="inline text-yellow-500" /> {r.rating} ★
-                                <span className="text-xs text-gray-400 ml-2">{new Date(r.createdAt).toLocaleString()}</span>
-                            </p>
-                            <p className="text-sm text-gray-700">{r.comment}</p>
-                        </div>
-                    )) : (
+                <div className="space-y-4 border-t pt-4 border-primary">
+                    {reviews.length ? (
+                        reviews.map((r) => (
+                            <div key={r._id} className="space-y-1">
+                                <p className="text-sm font-semibold text-neutral">
+                                    {r.userName || r.userEmail} — <FaStar className="inline text-yellow-500" /> {r.rating} ★
+                                    <span className="text-xs text-gray-400 ml-2">{new Date(r.createdAt).toLocaleString()}</span>
+                                </p>
+                                <p className="text-sm text-gray-700">{r.comment}</p>
+                            </div>
+                        ))
+                    ) : (
                         <NoFound
                             type="user"
                             title="No Reviews Found"
@@ -302,17 +339,24 @@ const ProductDetailsPage = () => {
             {!roleLoading && role === "user" && (
                 <div className="text-center space-x-3">
                     <Link to={`/payment/${id}`}>
-                        <button className="btn btn-accent text-white"><FaShoppingCart className="inline mr-1" /> Buy Now</button>
+                        <button className="btn bg-gradient-to-r from-primary to-secondary text-white">
+                            <FaShoppingCart className="inline mr-1" /> Buy Now
+                        </button>
                     </Link>
                     <button
                         onClick={handleWatchlist}
-                        className={`btn ${watchlisted ? 'btn-outline' : 'btn-outline'} ml-2`}
+                        className={`btn btn-outline ${watchlisted ? "btn-primary" : "btn-accent"
+                            }`}
                         disabled={watchlisted}
                     >
                         {watchlisted ? (
-                            <><FaStar className="inline text-primary" /> In Watchlist</>
+                            <>
+                                <FaStar className="inline text-primary" /> In Watchlist
+                            </>
                         ) : (
-                            <><FaStar className="inline" /> Add to Watchlist</>
+                            <>
+                                <FaStar className="inline" /> Add to Watchlist
+                            </>
                         )}
                     </button>
                 </div>
