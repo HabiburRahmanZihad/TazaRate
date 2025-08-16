@@ -5,6 +5,7 @@ import ProductSection from '../../Components/Home/ProductSection/ProductSection'
 import HowItWorks from '../../Components/Home/HowItWorks/HowItWorks';
 import Testimonials from '../../Components/Home/Testimonials/Testimonials';
 import FAQs from '../../Components/Home/FAQs/FAQs';
+import SupportedCompanies from '../../Components/Home/SupportedCompanies/SupportedCompanies';
 
 
 const Home = () => (
@@ -32,6 +33,15 @@ const Home = () => (
         <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}>
             <FAQs />
         </motion.section>
+
+        <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+        >
+            <SupportedCompanies />
+        </motion.section>
+
     </div>
 );
 
