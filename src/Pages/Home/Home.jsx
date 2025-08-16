@@ -6,6 +6,7 @@ import HowItWorks from '../../Components/Home/HowItWorks/HowItWorks';
 import Testimonials from '../../Components/Home/Testimonials/Testimonials';
 import FAQs from '../../Components/Home/FAQs/FAQs';
 import SupportedCompanies from '../../Components/Home/SupportedCompanies/SupportedCompanies';
+import ImpactStats from '../../Components/Home/ImpactStats/ImpactStats';
 
 
 const Home = () => (
@@ -31,15 +32,15 @@ const Home = () => (
         </motion.section>
 
         <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}>
+            <SupportedCompanies />
+        </motion.section>
+
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}>
             <FAQs />
         </motion.section>
 
-        <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-        >
-            <SupportedCompanies />
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}>
+            <ImpactStats />
         </motion.section>
 
     </div>
