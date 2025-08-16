@@ -108,12 +108,14 @@ const AllProducts = () => {
 
     return (
         <div className="p-4 sm:p-6 max-w-7xl mx-auto bg-white rounded-xl shadow">
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                     <MdInventory className="text-3xl text-secondary" />
                     <h2 className="text-2xl font-bold text-secondary">All Products</h2>
                 </div>
 
+                {/* Search */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     <input
                         type="text"
@@ -122,7 +124,7 @@ const AllProducts = () => {
                         onChange={e => setSearchInput(e.target.value)}
                         className="border-2 border-secondary rounded-md px-3 py-2 focus:outline-none w-full sm:w-72"
                         onKeyDown={e => {
-                            if (e.key === 'Enter') {
+                            if (e.key === "Enter") {
                                 setSearch(searchInput.trim());
                                 setPage(1);
                             }
@@ -141,6 +143,7 @@ const AllProducts = () => {
                 </div>
             </div>
 
+            {/* Content */}
             {isLoading ? (
                 <Loading />
             ) : isError ? (
@@ -153,8 +156,9 @@ const AllProducts = () => {
                 />
             ) : (
                 <>
+                    {/* Table */}
                     <div className="overflow-x-auto">
-                        <table className="min-w-full table-auto text-sm">
+                        <table className="min-w-[900px] w-full text-sm border-collapse">
                             <thead className="bg-secondary text-white">
                                 <tr>
                                     <th className="p-3 text-left">Image</th>
@@ -178,55 +182,61 @@ const AllProducts = () => {
                                             <img
                                                 src={p.imageUrl}
                                                 alt={p.itemName}
-                                                className="w-12 h-12 rounded object-cover"
+                                                className="w-12 h-12 rounded object-cover border border-secondary"
                                             />
                                         </td>
-                                        <td className="p-2">{p.itemName}</td>
-                                        <td className="p-2">{p.vendorName}</td>
-                                        <td className="p-2">{p.vendorEmail}</td>
-                                        <td className="p-2">{p.marketName}</td>
-                                        <td className="p-2">{p.date}</td>
-                                        <td className="p-2">৳{p.pricePerUnit}</td>
+                                        <td className="p-2 font-medium text-gray-800 truncate max-w-[160px]">
+                                            {p.itemName}
+                                        </td>
+                                        <td className="p-2 truncate max-w-[140px]">{p.vendorName}</td>
+                                        <td className="p-2 truncate max-w-[180px]">{p.vendorEmail}</td>
+                                        <td className="p-2 truncate max-w-[140px]">{p.marketName}</td>
+                                        <td className="p-2 whitespace-nowrap">{p.date}</td>
+                                        <td className="p-2 font-semibold">৳{p.pricePerUnit}</td>
                                         <td
-                                            className={`p-2 font-semibold ${p.status === 'approved'
-                                                    ? 'text-green-600'
-                                                    : p.status === 'rejected'
-                                                        ? 'text-red-600'
-                                                        : 'text-yellow-600'
+                                            className={`p-2 font-semibold capitalize ${p.status === "approved"
+                                                    ? "text-green-600"
+                                                    : p.status === "rejected"
+                                                        ? "text-red-600"
+                                                        : "text-yellow-600"
                                                 }`}
-                                            title={p.status === 'rejected' ? p.rejectionReason : ''}
+                                            title={p.status === "rejected" ? p.rejectionReason : ""}
                                         >
                                             {p.status}
                                         </td>
-                                        <td className="p-2 flex flex-col sm:flex-row sm:flex-wrap gap-2">
-                                            {p.status === 'pending' && (
-                                                <>
-                                                    <button
-                                                        onClick={() => handleApprove(p._id)}
-                                                        className="flex items-center gap-1 btn btn-xs bg-green-600 text-white"
-                                                    >
-                                                        <MdCheckCircle /> Approve
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleReject(p._id)}
-                                                        className="flex items-center gap-1 btn btn-xs bg-yellow-600 text-white"
-                                                    >
-                                                        <MdCancel /> Reject
-                                                    </button>
-                                                </>
-                                            )}
-                                            <Link
-                                                to={`/dashboard/update-product/${p._id}`}
-                                                className="flex items-center gap-1 btn btn-xs bg-primary text-white"
-                                            >
-                                                <MdEdit /> Update
-                                            </Link>
-                                            <button
-                                                onClick={() => handleDelete(p._id)}
-                                                className="flex items-center gap-1 btn btn-xs bg-red-500 text-white"
-                                            >
-                                                <MdDelete /> Delete
-                                            </button>
+
+                                        {/* Actions */}
+                                        <td className="p-2">
+                                            <div className="flex flex-wrap gap-2">
+                                                {p.status === "pending" && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleApprove(p._id)}
+                                                            className="flex items-center gap-1 px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs"
+                                                        >
+                                                            <MdCheckCircle /> <span className="hidden sm:inline">Approve</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleReject(p._id)}
+                                                            className="flex items-center gap-1 px-2 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-xs"
+                                                        >
+                                                            <MdCancel /> <span className="hidden sm:inline">Reject</span>
+                                                        </button>
+                                                    </>
+                                                )}
+                                                <Link
+                                                    to={`/dashboard/update-product/${p._id}`}
+                                                    className="flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/90 text-white rounded text-xs"
+                                                >
+                                                    <MdEdit /> <span className="hidden sm:inline">Update</span>
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleDelete(p._id)}
+                                                    className="flex items-center gap-1 px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs"
+                                                >
+                                                    <MdDelete /> <span className="hidden sm:inline">Delete</span>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -234,27 +244,27 @@ const AllProducts = () => {
                         </table>
                     </div>
 
-                    {/* Pagination controls */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-4">
+                    {/* Pagination */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4">
                         <button
                             onClick={() => canGoPrev && setPage(prev => prev - 1)}
                             disabled={!canGoPrev}
-                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoPrev
-                                    ? 'bg-secondary text-white hover:bg-secondary/90'
-                                    : 'bg-gray-300 cursor-not-allowed'
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm ${canGoPrev
+                                    ? "bg-secondary text-white hover:bg-secondary/90"
+                                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
                                 }`}
                         >
                             <MdArrowBack /> Prev
                         </button>
-                        <div>
+                        <div className="text-sm font-medium">
                             Page {page} of {totalPages}
                         </div>
                         <button
                             onClick={() => canGoNext && setPage(prev => prev + 1)}
                             disabled={!canGoNext}
-                            className={`flex items-center gap-1 btn btn-sm rounded ${canGoNext
-                                    ? 'bg-secondary text-white hover:bg-secondary/90'
-                                    : 'bg-gray-300 cursor-not-allowed'
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm ${canGoNext
+                                    ? "bg-secondary text-white hover:bg-secondary/90"
+                                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
                                 }`}
                         >
                             Next <MdArrowForward />
@@ -264,6 +274,7 @@ const AllProducts = () => {
             )}
         </div>
     );
+
 };
 
 export default AllProducts;
