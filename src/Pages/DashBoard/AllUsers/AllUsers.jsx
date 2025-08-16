@@ -51,7 +51,8 @@ const AllUsers = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+        <div className="max-w-6xl mx-auto p-6 bg-base-100 rounded-2xl shadow-xl">
+            {/* Header */}
             <div className="flex items-center gap-2 mb-6">
                 <MdPeople className="text-3xl text-secondary" />
                 <h2 className="text-2xl font-bold text-secondary">All Users</h2>
@@ -64,28 +65,28 @@ const AllUsers = () => {
                     placeholder="Search by name or email"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full md:w-1/2 input bg-white border-2 border-secondary focus:outline-none"
+                    className="w-full md:w-1/2 input bg-base-100 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
                 <button
                     type="button"
                     onClick={() => queryClient.invalidateQueries(['all-users'])}
-                    className="btn flex items-center gap-2 bg-secondary text-white hover:bg-secondary/90"
+                    className="btn flex items-center gap-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 w-full md:w-auto"
                 >
-                    Search
                     <FiSearch className="text-lg" />
+                    Search
                 </button>
-
             </div>
 
+            {/* Loading / Empty */}
             {isLoading ? (
-                <Loading></Loading>
+                <Loading />
             ) : users.length === 0 ? (
                 <div className="text-center py-10 text-gray-500">
                     <p className="text-lg font-medium">😕 No users found matching your search.</p>
                     <p className="text-sm">Try adjusting the search term.</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
                     <table className="table w-full">
                         <thead className="bg-secondary text-white">
                             <tr>
@@ -98,25 +99,32 @@ const AllUsers = () => {
                         </thead>
                         <tbody>
                             {users.map((user, index) => (
-                                <tr key={user._id} className="border-t hover:bg-gray-50">
+                                <tr
+                                    key={user._id}
+                                    className="border-t hover:bg-base-200 transition-colors"
+                                >
                                     <td className="py-3 px-4">{index + 1}</td>
                                     <td className="py-3 px-4">{user.name || 'N/A'}</td>
                                     <td className="py-3 px-4">{user.email}</td>
                                     <td className="py-3 px-4 capitalize">{user.role}</td>
-                                    <td className="py-3 px-4 space-x-2">
-                                        {['user', 'vendor', 'admin'].map((role) => (
-                                            <button
-                                                key={role}
-                                                disabled={user.role === role}
-                                                onClick={() => handleRoleChange(user._id, role, user.role)}
-                                                className={`btn btn-xs ${user.role === role
-                                                    ? 'btn-disabled bg-gray-300 text-gray-600 cursor-not-allowed'
-                                                    : 'bg-secondary text-neutral hover:bg-secondary/90'
-                                                    }`}
-                                            >
-                                                Make {role}
-                                            </button>
-                                        ))}
+                                    <td className="py-3 px-4">
+                                        <div className="flex flex-wrap gap-2">
+                                            {['user', 'vendor', 'admin'].map((role) => (
+                                                <button
+                                                    key={role}
+                                                    disabled={user.role === role}
+                                                    onClick={() =>
+                                                        handleRoleChange(user._id, role, user.role)
+                                                    }
+                                                    className={`btn btn-xs px-2 py-1 rounded-md ${user.role === role
+                                                        ? 'btn-disabled bg-gray-300 text-gray-600 cursor-not-allowed'
+                                                        : 'bg-secondary text-white hover:bg-secondary/90'
+                                                        }`}
+                                                >
+                                                    Make {role}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

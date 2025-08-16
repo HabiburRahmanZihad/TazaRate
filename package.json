@@ -21,6 +21,7 @@
     "firebase": "^11.9.0",
     "framer-motion": "^12.16.0",
     "lottie-react": "^2.4.1",
+    "motion": "^12.23.12",
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
     "react-datepicker": "^8.4.0",
