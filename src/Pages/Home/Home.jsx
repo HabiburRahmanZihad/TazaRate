@@ -7,6 +7,7 @@ import Testimonials from '../../Components/Home/Testimonials/Testimonials';
 import FAQs from '../../Components/Home/FAQs/FAQs';
 import SupportedCompanies from '../../Components/Home/SupportedCompanies/SupportedCompanies';
 import ImpactStats from '../../Components/Home/ImpactStats/ImpactStats';
+import { Content } from '../../Components/Home/Content/Content';
 
 
 const Home = () => (
@@ -42,6 +43,11 @@ const Home = () => (
         <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}>
             <ImpactStats />
         </motion.section>
+
+        <motion.section initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }}>
+            <Content/>
+        </motion.section>
+
 
     </div>
 );
