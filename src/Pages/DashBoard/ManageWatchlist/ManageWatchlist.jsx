@@ -52,33 +52,36 @@ const ManageWatchlist = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-bold text-center text-secondary mb-10"
+                className="text-3xl sm:text-4xl font-bold text-center text-secondary mb-10"
             >
                 Watchlist
             </motion.h1>
 
             {watchlist.length === 0 ? (
                 <div className="text-center text-gray-500 space-y-4">
-                    <p className="text-lg">Your watchlist is empty.</p>
-                    <Link to="/products" className="btn btn-secondary inline-flex items-center gap-2">
+                    <p className="text-base sm:text-lg">Your watchlist is empty.</p>
+                    <Link
+                        to="/products"
+                        className="btn btn-secondary inline-flex items-center gap-2"
+                    >
                         <FaPlus /> Browse Products
                     </Link>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
-                    <table className="min-w-full text-sm text-left">
-                        <thead className="bg-gray-100 text-gray-700">
+                <div className="bg-white/90 backdrop-blur-lg shadow-lg rounded-xl border border-gray-200 overflow-x-auto">
+                    <table className="min-w-full text-sm sm:text-base text-left">
+                        <thead className="bg-gray-100 text-gray-700 text-xs sm:text-sm">
                             <tr>
-                                <th className="px-5 py-3">Image</th>
-                                <th className="px-5 py-3">Product</th>
-                                <th className="px-5 py-3">Market</th>
-                                <th className="px-5 py-3">Date</th>
-                                <th className="px-5 py-3 text-right">Actions</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Image</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Product</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Market</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Date</th>
+                                <th className="px-3 sm:px-5 py-3 text-right whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,34 +93,45 @@ const ManageWatchlist = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ delay: idx * 0.03 }}
-                                        className="border-b border-secondary/50 hover:bg-gray-50 transition-colors"
+                                        className="border-b border-secondary/40 hover:bg-gray-50 transition-colors"
                                     >
-                                        <td className="px-5 py-3">
+                                        <td className="px-3 sm:px-5 py-3">
                                             <img
                                                 src={product.imageUrl}
                                                 alt={product.itemName}
-                                                className="w-12 h-12 object-cover rounded-lg shadow"
+                                                className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg shadow"
                                             />
                                         </td>
-                                        <td className="px-5 py-3 font-medium">{product.itemName}</td>
-                                        <td className="px-5 py-3">{product.marketName}</td>
-                                        <td className="px-5 py-3">
+                                        <td className="px-3 sm:px-5 py-3 font-medium break-words">
+                                            {product.itemName}
+                                        </td>
+                                        <td className="px-3 sm:px-5 py-3 whitespace-nowrap">
+                                            {product.marketName}
+                                        </td>
+                                        <td className="px-3 sm:px-5 py-3 whitespace-nowrap">
                                             {new Date(product.date).toLocaleDateString()}
                                         </td>
-                                        <td className="px-5 py-3 text-right  grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                            <Link to="/products" className="btn btn-sm btn-outline">
-                                                <FaPlus className="mr-1" />
-                                                Add More
-                                            </Link>
-                                            <button
-                                                onClick={() => handleRemove(product._id)}
-                                                disabled={removingId === product._id}
-                                                className={`btn btn-sm btn-error inline-flex items-center gap-1 ${removingId === product._id ? "opacity-50" : ""
-                                                    }`}
-                                            >
-                                                <FaTrashAlt />
-                                                {removingId === product._id ? "Removing..." : "Remove"}
-                                            </button>
+                                        <td className="px-3 sm:px-5 py-3 text-right">
+                                            <div className="flex flex-col sm:flex-row justify-end gap-2">
+                                                <Link
+                                                    to="/products"
+                                                    className="btn btn-sm btn-outline"
+                                                >
+                                                    <FaPlus className="mr-1" />
+                                                    Add More
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleRemove(product._id)}
+                                                    disabled={removingId === product._id}
+                                                    className={`btn btn-sm btn-error inline-flex items-center gap-1 ${removingId === product._id ? "opacity-50" : ""
+                                                        }`}
+                                                >
+                                                    <FaTrashAlt />
+                                                    {removingId === product._id
+                                                        ? "Removing..."
+                                                        : "Remove"}
+                                                </button>
+                                            </div>
                                         </td>
                                     </motion.tr>
                                 ))}
