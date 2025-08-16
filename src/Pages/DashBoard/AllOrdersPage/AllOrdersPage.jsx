@@ -32,18 +32,22 @@ const AllOrdersPage = () => {
             ) : error ? (
                 <Error />
             ) : orders.length === 0 ? (
-                <NoFound type="order" title="No orders found" message="Looks like there haven’t been any transactions yet." />
+                <NoFound
+                    type="order"
+                    title="No orders found"
+                    message="Looks like there haven’t been any transactions yet."
+                />
             ) : (
                 <div className="bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl overflow-x-auto border border-gray-200">
-                    <table className="min-w-full text-lg text-left text-neutral font-medium">
-                        <thead className="bg-secondary text-white text-md">
+                    <table className="min-w-full text-sm md:text-base text-left text-neutral font-medium">
+                        <thead className="bg-secondary text-white text-xs md:text-md">
                             <tr>
-                                <th className="px-6 py-5">🛒 Product</th>
-                                <th className="px-6 py-5">📧 Buyer Email</th>
-                                <th className="px-6 py-5">🏪 Market</th>
-                                <th className="px-6 py-5">👤 Vendor</th>
-                                <th className="px-6 py-5">💰 Price (৳)</th>
-                                <th className="px-6 py-5">📅 Paid On</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">🛒 Product</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">📧 Buyer Email</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">🏪 Market</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">👤 Vendor</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">💰 Price (৳)</th>
+                                <th className="px-4 md:px-6 py-3 md:py-5 whitespace-nowrap">📅 Paid On</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,22 +56,22 @@ const AllOrdersPage = () => {
                                     key={order._id}
                                     className="border-t border-secondary/30 hover:bg-gray-50 transition-all duration-200 ease-in-out"
                                 >
-                                    <td className="px-6 py-4">{order.productName}</td>
-                                    <td className="px-6 py-4">{order.userEmail}</td>
-                                    <td className="px-6 py-4">{order.marketName}</td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-4 md:px-6 py-3 md:py-4 break-words">{order.productName}</td>
+                                    <td className="px-4 md:px-6 py-3 md:py-4 break-words">{order.userEmail}</td>
+                                    <td className="px-4 md:px-6 py-3 md:py-4">{order.marketName}</td>
+                                    <td className="px-4 md:px-6 py-3 md:py-4">
                                         {order.vendorName || (
                                             <span className="text-gray-400 italic">N/A</span>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 font-bold text-neutral-800">
+                                    <td className="px-4 md:px-6 py-3 md:py-4 font-bold text-neutral-800">
                                         ৳ {order.price}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
                                         {new Date(order.paidAt).toLocaleDateString(undefined, {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
                                         })}
                                     </td>
                                 </tr>
