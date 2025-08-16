@@ -56,17 +56,21 @@ const MyProducts = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+            {/* Title */}
             <motion.div
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className="flex items-center justify-center gap-2 mb-10"
             >
-                <MdInventory className="text-4xl text-secondary" />
-                <h2 className="text-4xl font-bold text-secondary">My Products</h2>
+                <MdInventory className="text-3xl sm:text-4xl text-secondary" />
+                <h2 className="text-3xl sm:text-4xl font-bold text-secondary">
+                    My Products
+                </h2>
             </motion.div>
 
+            {/* Empty State */}
             {products.length === 0 ? (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -74,8 +78,8 @@ const MyProducts = () => {
                     transition={{ duration: 0.4 }}
                     className="text-center text-gray-500 space-y-4"
                 >
-                    <MdAddShoppingCart className="mx-auto text-6xl text-gray-300" />
-                    <p className="text-lg">You haven’t added any products yet.</p>
+                    <MdAddShoppingCart className="mx-auto text-5xl sm:text-6xl text-gray-300" />
+                    <p className="text-base sm:text-lg">You haven’t added any products yet.</p>
                     <Link
                         to="/dashboard/add-product"
                         className="btn btn-secondary inline-flex items-center gap-2"
@@ -84,16 +88,16 @@ const MyProducts = () => {
                     </Link>
                 </motion.div>
             ) : (
-                <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
-                    <table className="min-w-full text-sm text-left">
-                        <thead className="bg-gray-100 text-gray-700">
+                <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg border border-gray-200 overflow-x-auto">
+                    <table className="min-w-full text-sm sm:text-base text-left">
+                        <thead className="bg-gray-100 text-gray-700 text-xs sm:text-sm">
                             <tr>
-                                <th className="px-5 py-3">Item</th>
-                                <th className="px-5 py-3">Price (৳)</th>
-                                <th className="px-5 py-3">Market</th>
-                                <th className="px-5 py-3">Date</th>
-                                <th className="px-5 py-3">Status</th>
-                                <th className="px-5 py-3 text-right">Actions</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Item</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Price (৳)</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Market</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Date</th>
+                                <th className="px-3 sm:px-5 py-3 whitespace-nowrap">Status</th>
+                                <th className="px-3 sm:px-5 py-3 text-right whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,43 +111,49 @@ const MyProducts = () => {
                                         transition={{ delay: i * 0.04 }}
                                         className="border-b border-secondary/30 hover:bg-gray-50 transition-colors"
                                     >
-                                        <td className="px-5 py-3 font-medium">{p.itemName}</td>
-                                        <td className="px-5 py-3 text-green-600 font-semibold">
+                                        <td className="px-3 sm:px-5 py-3 font-medium break-words">
+                                            {p.itemName}
+                                        </td>
+                                        <td className="px-3 sm:px-5 py-3 text-green-600 font-semibold whitespace-nowrap">
                                             ৳{p.pricePerUnit}
                                         </td>
-                                        <td className="px-5 py-3">{p.marketName}</td>
-                                        <td className="px-5 py-3">
+                                        <td className="px-3 sm:px-5 py-3 whitespace-nowrap">
+                                            {p.marketName}
+                                        </td>
+                                        <td className="px-3 sm:px-5 py-3 whitespace-nowrap">
                                             {new Date(p.date).toLocaleDateString()}
                                         </td>
                                         <td
-                                            className={`px-5 py-3 capitalize ${p.status === "rejected"
-                                                ? "text-red-600 underline cursor-help"
-                                                : p.status === "approved"
-                                                    ? "text-green-600"
-                                                    : "text-yellow-500"
+                                            className={`px-3 sm:px-5 py-3 capitalize whitespace-nowrap ${p.status === "rejected"
+                                                    ? "text-red-600 underline cursor-help"
+                                                    : p.status === "approved"
+                                                        ? "text-green-600"
+                                                        : "text-yellow-500"
                                                 }`}
                                             title={p.status === "rejected" ? p.rejectionReason : ""}
                                         >
                                             {p.status}
                                         </td>
-                                        <td className="px-5 py-3 text-right space-x-2 grid grid-cols-1 sm:flex items-center justify-end gap-2">
-                                            {p.status !== "rejected" && (
-                                                <Link
-                                                    to={`/dashboard/update-product/${p._id}`}
-                                                    className="btn btn-sm btn-outline btn-info inline-flex items-center gap-1"
+                                        <td className="px-3 sm:px-5 py-3 text-right">
+                                            <div className="flex flex-col sm:flex-row justify-end gap-2">
+                                                {p.status !== "rejected" && (
+                                                    <Link
+                                                        to={`/dashboard/update-product/${p._id}`}
+                                                        className="btn btn-sm btn-outline btn-info inline-flex items-center gap-1"
+                                                    >
+                                                        <FaEdit /> Edit
+                                                    </Link>
+                                                )}
+                                                <button
+                                                    onClick={() => handleDelete(p._id)}
+                                                    disabled={deletingId === p._id}
+                                                    className={`btn btn-sm btn-outline btn-error inline-flex items-center gap-1 ${deletingId === p._id ? "opacity-50 cursor-not-allowed" : ""
+                                                        }`}
                                                 >
-                                                    <FaEdit /> Edit
-                                                </Link>
-                                            )}
-                                            <button
-                                                onClick={() => handleDelete(p._id)}
-                                                disabled={deletingId === p._id}
-                                                className={`btn btn-sm btn-outline btn-error inline-flex items-center gap-1 ${deletingId === p._id && "opacity-50 cursor-not-allowed"
-                                                    }`}
-                                            >
-                                                <FaTrash />
-                                                {deletingId === p._id ? "Deleting..." : "Delete"}
-                                            </button>
+                                                    <FaTrash />
+                                                    {deletingId === p._id ? "Deleting..." : "Delete"}
+                                                </button>
+                                            </div>
                                         </td>
                                     </motion.tr>
                                 ))}
