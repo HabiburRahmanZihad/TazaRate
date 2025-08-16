@@ -64,20 +64,24 @@ const AllAdvertisementsAdmin = () => {
             {/* Header */}
             <div className="flex items-center gap-3 mb-8">
                 <MdCampaign className="text-4xl text-secondary" />
-                <h2 className="text-2xl font-bold text-secondary">All Advertisements</h2>
+                <h2 className="text-2xl font-bold text-secondary">
+                    All Advertisements
+                </h2>
             </div>
 
             {/* Table */}
             <div className="bg-white shadow-xl rounded-xl overflow-x-auto border border-gray-200">
                 {isLoading ? (
-                    <Loading></Loading>
+                    <Loading />
                 ) : ads.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">
-                        <p className="text-lg font-medium">😕 No advertisements found.</p>
+                        <p className="text-lg font-medium">
+                            😕 No advertisements found.
+                        </p>
                         <p className="text-sm">Please check back later.</p>
                     </div>
                 ) : (
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm min-w-[700px]">
                         <thead className="bg-secondary text-white text-left">
                             <tr>
                                 <th className="py-3 px-4">#</th>
@@ -90,35 +94,64 @@ const AllAdvertisementsAdmin = () => {
                         </thead>
                         <tbody>
                             {ads.map((ad, idx) => (
-                                <tr key={ad._id} className=" border-t border-secondary hover:bg-gray-50 transition duration-150">
-                                    <td className="px-4 py-3">{idx + 1}</td>
-                                    <td className="px-4 py-3">
-                                        <img src={ad.imageUrl} alt={ad.adTitle} className="w-16 h-16 object-cover rounded-md border" />
+                                <tr
+                                    key={ad._id}
+                                    className="border-t border-gray-200 hover:bg-gray-50 transition duration-150"
+                                >
+                                    <td className="px-4 py-3 font-medium text-gray-700">
+                                        {idx + 1}
                                     </td>
+
+                                    {/* Image */}
                                     <td className="px-4 py-3">
-                                        <p className="font-medium text-neutral">{ad.adTitle}</p>
-                                        <p className="text-xs text-gray-500">{ad.shortDescription}</p>
+                                        <img
+                                            src={ad.imageUrl}
+                                            alt={ad.adTitle}
+                                            className="w-16 h-16 object-cover rounded-md border"
+                                        />
                                     </td>
+
+                                    {/* Title + description */}
                                     <td className="px-4 py-3">
-                                        <p>{ad.vendorName}</p>
-                                        <p className="text-xs text-gray-500">{ad.vendorEmail}</p>
+                                        <p className="font-semibold text-neutral truncate max-w-[180px]">
+                                            {ad.adTitle}
+                                        </p>
+                                        <p className="text-xs text-gray-500 line-clamp-2 max-w-[200px]">
+                                            {ad.shortDescription}
+                                        </p>
                                     </td>
+
+                                    {/* Vendor */}
+                                    <td className="px-4 py-3">
+                                        <p className="font-medium">{ad.vendorName}</p>
+                                        <p className="text-xs text-gray-500 truncate max-w-[180px]">
+                                            {ad.vendorEmail}
+                                        </p>
+                                    </td>
+
+                                    {/* Status */}
                                     <td className="px-4 py-3">
                                         <span
-                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold text-white capitalize ${ad.status === 'accepted'
-                                                    ? 'bg-emerald-500'
-                                                    : ad.status === 'rejected'
-                                                        ? 'bg-rose-500'
-                                                        : 'bg-yellow-500'
+                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold text-white capitalize ${ad.status === "accepted"
+                                                    ? "bg-emerald-500"
+                                                    : ad.status === "rejected"
+                                                        ? "bg-rose-500"
+                                                        : "bg-yellow-500"
                                                 }`}
-                                            title={ad.status === 'rejected' && ad.rejectionFeedback ? ad.rejectionFeedback : ''}
+                                            title={
+                                                ad.status === "rejected" && ad.rejectionFeedback
+                                                    ? ad.rejectionFeedback
+                                                    : ""
+                                            }
                                         >
                                             {ad.status}
                                         </span>
                                     </td>
+
+                                    {/* Actions */}
                                     <td className="px-4 py-3">
-                                        {ad.status === 'pending' && (
-                                            <div className="flex gap-2">
+                                        {ad.status === "pending" && (
+                                            <div className="flex flex-wrap gap-2">
                                                 <button
                                                     onClick={() => confirmApprove(ad._id)}
                                                     className="flex items-center gap-1 px-3 py-1 text-white bg-emerald-600 hover:bg-emerald-700 rounded text-xs"
