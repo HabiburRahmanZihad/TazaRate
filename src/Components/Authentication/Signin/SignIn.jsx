@@ -2,20 +2,11 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
-import { motion } from 'framer-motion';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: i => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.1 },
-    }),
-};
 
 const SignIn = () => {
     const { signInUser, loginGoogle, forgetPassword } = useAuth();
@@ -135,39 +126,26 @@ const SignIn = () => {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        <div
             className="min-h-screen flex items-center justify-center bg-base-200 p-6 border"
         >
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={fadeInUp}
+            <div
                 className="w-full max-w-md p-8 rounded-2xl shadow-xl border border-primary bg-white/80 backdrop-blur"
             >
-                <motion.h1 variants={fadeInUp} custom={0} className="text-2xl font-semibold text-center mb-4">
-                    Sign in with{' '}
-                    <Link to="/" className="text-primary font-bold underline hover:text-primary-focus">
-                        TazaRate
-                    </Link>
-                </motion.h1>
+                <div className="text-center mb-6">
+                    <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-800 mb-2">
+                        Welcome Back
+                    </h1>
+                    <p className="text-gray-600 font-bold">
+                        Sign in with <Link to="/" className="text-lime-600">TazaRate</Link>
+                    </p>
+                </div>
 
-                <motion.h2
-                    variants={fadeInUp}
-                    custom={0.1}
-                    className="text-3xl font-bold text-center text-primary mb-6 merriweather"
-                >
-                    Welcome Back
-                </motion.h2>
 
-                <motion.form
+                <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="space-y-5"
                     noValidate
-                    variants={fadeInUp}
-                    custom={0.2}
                 >
                     {/* Email */}
                     <div className="space-y-1">
@@ -212,7 +190,7 @@ const SignIn = () => {
                     </div>
 
                     {/* Submit */}
-                    <motion.button
+                    <button
                         type="submit"
                         disabled={loading}
                         whileHover={{ scale: 1.03 }}
@@ -220,37 +198,37 @@ const SignIn = () => {
                         className="w-full py-3 bg-primary text-white rounded-md font-semibold shadow-sm hover:bg-primary-dark transition duration-200 ease-in-out"
                     >
                         {loading ? 'Signing in...' : 'Sign In'}
-                    </motion.button>
-                </motion.form>
+                    </button>
+                </form>
 
-                <motion.p
-                    variants={fadeInUp}
-                    custom={0.5}
+                <p
+
+
                     className="mt-5 text-center text-sm text-gray-600"
                 >
                     Don’t have an account?{' '}
                     <Link to="/signup" className="text-primary font-medium hover:underline">
                         Sign Up
                     </Link>
-                </motion.p>
+                </p>
 
-                <motion.div variants={fadeInUp} custom={0.6} className="divider my-6">
+                <div className="divider my-6">
                     OR
-                </motion.div>
+                </div>
 
-                <motion.button
+                <button
                     onClick={handleGoogleSignIn}
                     disabled={loading}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    variants={fadeInUp}
-                    custom={0.7}
+
+
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-300 rounded-md shadow-sm text-gray-700 hover:bg-gray-50 transition duration-200 ease-in-out"
                 >
                     <FcGoogle className="w-5 h-5" /> Continue with Google
-                </motion.button>
-            </motion.div>
-        </motion.div>
+                </button>
+            </div>
+        </div>
     );
 };
 
