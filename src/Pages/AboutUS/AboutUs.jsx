@@ -30,7 +30,7 @@ const team = [
     {
         name: 'Saimon Uddin Imam',
         role: 'Community Manager & Content Creator',
-        location: 'Dhaka, Bangladesh',
+        location: 'Chattogram, Bangladesh',
         speciality: 'Vendor coordination and quality control',
         email: 'saimon@tazarate.com',
         phone: '+880 1711 000000',
@@ -42,7 +42,7 @@ const team = [
     {
         name: 'Rohit Ahemed',
         role: 'Market Operations Lead',
-        location: 'Dhaka, Bangladesh',
+        location: 'Chattogram, Bangladesh',
         speciality: 'Vendor coordination and quality control',
         email: 'rohit@tazarate.com',
         phone: '+880 1711 000000',
